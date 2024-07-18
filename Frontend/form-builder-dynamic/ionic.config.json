@@ -1,0 +1,7 @@
+{
+  "name": "form-builder-dynamic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

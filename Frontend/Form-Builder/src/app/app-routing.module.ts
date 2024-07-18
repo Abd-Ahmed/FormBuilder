@@ -4,9 +4,19 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+    redirectTo: 'form-canvas',
+    pathMatch: 'full'
+  },
+  {
+    path: 'form-canvas',
+    loadChildren: () => import('./form-canvas/form-canvas.module').then( m => m.FormCanvasPageModule)
+  },
+  {
+    path: 'field-selection',
+    loadChildren: () => import('./field-selection/field-selection.module').then( m => m.FieldSelectionPageModule)
   }
 ];
+
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })

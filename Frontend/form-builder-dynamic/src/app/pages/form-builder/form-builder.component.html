@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Form Builder</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label position="floating">Form Name</ion-label>
+    <ion-input [(ngModel)]="formName"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Description</ion-label>
+    <ion-textarea [(ngModel)]="description"></ion-textarea>
+  </ion-item>
+
+  <ion-list>
+    <ion-item *ngFor="let field of formFields; let i = index">
+      <ion-label>
+        <h2>{{ field.fieldType }}</h2>
+        <ion-input placeholder="Label" [(ngModel)]="field.label"></ion-input>
+        <ion-input placeholder="Placeholder" [(ngModel)]="field.placeholder"></ion-input>
+      </ion-label>
+      <ion-button slot="end" (click)="removeField(i)">Remove</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-item>
+    <ion-label>Add Field</ion-label>
+    <ion-select placeholder="Select field type" (ionChange)="addField($event.detail.value)">
+      <ion-select-option *ngFor="let type of availableFieldTypes" [value]="type">
+        {{ type }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-button slot="end" (click)="saveForm()">Save Form</ion-button>
+
+  </ion-content>

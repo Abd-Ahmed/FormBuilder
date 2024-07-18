@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Form Preview</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="formulaire">
+  <h1>{{ formulaire.formName }}</h1>
+  <p>{{ formulaire.description }}</p>
+
+  <form>
+    <ion-item *ngFor="let field of formulaire.formFields">
+      <ion-label position="floating">{{ field.label }}</ion-label>
+      <ion-input *ngIf="field.fieldType === 'text'" [placeholder]="field.placeholder"></ion-input>
+      <ion-input *ngIf="field.fieldType === 'number'" type="number" [placeholder]="field.placeholder"></ion-input>
+      <ion-select *ngIf="field.fieldType === 'dropdown'" [placeholder]="field.placeholder">
+        <!-- Add options dynamically if needed -->
+      </ion-select>
+      <ion-radio-group *ngIf="field.fieldType === 'radio'">
+        <!-- Add radio options dynamically if needed -->
+      </ion-radio-group>
+      <ion-checkbox *ngIf="field.fieldType === 'checkbox'"></ion-checkbox>
+    </ion-item>
+  </form>
+</ion-content>

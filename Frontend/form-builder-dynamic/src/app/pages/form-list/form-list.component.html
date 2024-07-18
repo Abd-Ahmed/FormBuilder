@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Form List</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let formulaire of formulaires">
+      <ion-label>
+        <h2>{{ formulaire.formName }}</h2>
+        <p>{{ formulaire.description }}</p>
+      </ion-label>
+      <ion-button slot="end" [routerLink]="['/form-preview', formulaire.id]">Preview</ion-button>
+      <ion-button slot="end" (click)="deleteFormulaire(formulaire.id)">Delete</ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>
