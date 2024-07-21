@@ -1,0 +1,36 @@
+.form-field {
+    --padding-start: 0;
+    --padding-end: 0;
+    --inner-padding-end: 0;
+  
+    ion-label {
+      margin-bottom: 8px;
+    }
+  
+    ion-input, ion-textarea, ion-datetime, ion-range, ion-select {
+      --padding-start: 0;
+      margin-top: 8px;
+    }
+  
+    ion-radio-group {
+      margin-top: 8px;
+    }
+  
+    ion-checkbox {
+      margin-top: 16px;
+    }
+  }
+  
+  ion-list {
+    background: transparent;
+  }
+  
+  ion-item {
+    --background: transparent;
+    --border-color: var(--ion-color-medium);
+    --border-width: 0 0 1px 0;
+    --border-style: solid;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    margin-bottom: 16px;
+  }

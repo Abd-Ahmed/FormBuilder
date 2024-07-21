@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { FormulaireService } from '../../services/formulaire.service';
+import { Router } from '@angular/router';
+import { FormField } from 'src/model/FormField';
 
 @Component({
   selector: 'app-form-builder',
@@ -9,17 +11,28 @@ import { FormulaireService } from '../../services/formulaire.service';
 export class FormBuilderComponent {
   formName: string = '';
   description: string = '';
-  formFields: any[] = [];
-  availableFieldTypes = ['text', 'number', 'dropdown', 'radio', 'checkbox'];
+  formFields: FormField[] = [];
+  availableFieldTypes = [
+    'text', 'number', 'email', 'password', 'date', 'textarea', 
+    'url', 'file', 'dropdown', 'radio', 'checkbox'
+  ];
 
-  constructor(private formulaireService: FormulaireService) {}
+  constructor(private FS: FormulaireService, private router: Router) {}
 
   addField(fieldType: string) {
-    this.formFields.push({
+    const newField: FormField = {
       fieldType: fieldType,
       label: '',
-      placeholder: ''
-    });
+      placeholder: this.shouldHavePlaceholder(fieldType) ? '' : undefined,
+      options: this.shouldHaveOptions(fieldType) ? [] : undefined,
+      required: false,
+      minLength: fieldType === 'text' || fieldType === 'textarea' ? 0 : undefined,
+      maxLength: fieldType === 'text' || fieldType === 'textarea' ? undefined : undefined,
+      min: fieldType === 'number' ? undefined : undefined,
+      max: fieldType === 'number' ? undefined : undefined,
+      pattern: undefined
+    };
+    this.formFields.push(newField);
   }
 
   removeField(index: number) {
@@ -27,21 +40,34 @@ export class FormBuilderComponent {
   }
 
   saveForm() {
-    const formulaire = {
+    const formToSave = {
       formName: this.formName,
       description: this.description,
       formFields: this.formFields
     };
 
-    this.formulaireService.createFormulaire(formulaire).subscribe(
-      response => {
-        console.log('Form saved successfully', response);
-        // Handle success (e.g., show a success message, navigate to form list)
-      },
-      error => {
-        console.error('Error saving form', error);
-        // Handle error (e.g., show an error message)
-      }
-    );
+    this.FS.createFormulaire(formToSave).subscribe(() => {
+      this.router.navigate(['/form-list']);
+    });
+  }
+
+  updateOptions(field: FormField, optionsString: string) {
+    field.options = optionsString.split(',').map(option => option.trim());
+  }
+
+  shouldHavePlaceholder(fieldType: string): boolean {
+    return ['text', 'number', 'email', 'password', 'url', 'textarea'].includes(fieldType);
+  }
+
+  shouldHaveOptions(fieldType: string): boolean {
+    return ['dropdown', 'radio', 'checkbox'].includes(fieldType);
+  }
+
+  hasLengthValidation(fieldType: string): boolean {
+    return ['text', 'textarea', 'password'].includes(fieldType);
+  }
+
+  hasNumberValidation(fieldType: string): boolean {
+    return fieldType === 'number';
   }
 }

@@ -17,7 +17,12 @@ const routes: Routes = [
   {
     path: 'form-list',
     component: FormListComponent
+  },
+  { path: 'form-preview/:id',
+    component: FormPreviewComponent 
   }
+
+
 ];
 
 

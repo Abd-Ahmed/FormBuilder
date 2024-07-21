@@ -20,7 +20,32 @@
       <ion-label>
         <h2>{{ field.fieldType }}</h2>
         <ion-input placeholder="Label" [(ngModel)]="field.label"></ion-input>
-        <ion-input placeholder="Placeholder" [(ngModel)]="field.placeholder"></ion-input>
+        <ion-input *ngIf="shouldHavePlaceholder(field.fieldType)" placeholder="Placeholder" [(ngModel)]="field.placeholder"></ion-input>
+
+        <ion-item>
+          <ion-label>Required</ion-label>
+          <ion-checkbox [(ngModel)]="field.required"></ion-checkbox>
+        </ion-item>
+
+        <div *ngIf="shouldHaveOptions(field.fieldType)">
+          <ion-input 
+            placeholder="Options (comma separated)" 
+            [(ngModel)]="field.options" 
+            (ngModelChange)="updateOptions(field, $event)">
+          </ion-input>
+        </div>
+
+        <div *ngIf="hasLengthValidation(field.fieldType)">
+          <ion-input type="number" placeholder="Min Length" [(ngModel)]="field.minLength"></ion-input>
+          <ion-input type="number" placeholder="Max Length" [(ngModel)]="field.maxLength"></ion-input>
+        </div>
+
+        <div *ngIf="hasNumberValidation(field.fieldType)">
+          <ion-input type="number" placeholder="Min Value" [(ngModel)]="field.min"></ion-input>
+          <ion-input type="number" placeholder="Max Value" [(ngModel)]="field.max"></ion-input>
+        </div>
+
+        <ion-input placeholder="Pattern (regex)" [(ngModel)]="field.pattern"></ion-input>
       </ion-label>
       <ion-button slot="end" (click)="removeField(i)">Remove</ion-button>
     </ion-item>
@@ -34,6 +59,5 @@
       </ion-select-option>
     </ion-select>
   </ion-item>
-  <ion-button slot="end" (click)="saveForm()">Save Form</ion-button>
-
-  </ion-content>
+  <ion-button expand="block" (click)="saveForm()">Save Form</ion-button>
+</ion-content>

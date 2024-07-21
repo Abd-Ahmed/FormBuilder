@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormulaireService } from '../../services/formulaire.service';
+import { Formulaire } from 'src/model/Formulaire';
 
 @Component({
   selector: 'app-form-list',
@@ -7,18 +8,18 @@ import { FormulaireService } from '../../services/formulaire.service';
   styleUrls: ['./form-list.component.scss'],
 })
 export class FormListComponent implements OnInit {
-  formulaires: any[] = [];
+  formulaires: Formulaire[] = [];
 
-  constructor(private formulaireService: FormulaireService) {}
+  constructor(private FS: FormulaireService) {}
 
   ngOnInit() {
     this.loadFormulaires();
   }
 
   loadFormulaires() {
-    this.formulaireService.getAllFormulaires().subscribe(
-      (data) => {
-        this.formulaires = data;
+    this.FS.getAllFormulaires().subscribe(
+      (r: Formulaire[]) => {
+        this.formulaires = r;
       },
       (error) => {
         console.error('Error fetching formulaires', error);
@@ -27,7 +28,7 @@ export class FormListComponent implements OnInit {
   }
 
   deleteFormulaire(id: number) {
-    this.formulaireService.deleteFormulaire(id).subscribe(
+    this.FS.deleteFormulaire(id).subscribe(
       () => {
         this.loadFormulaires();
       },
