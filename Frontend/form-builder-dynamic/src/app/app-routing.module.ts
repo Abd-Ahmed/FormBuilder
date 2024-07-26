@@ -7,7 +7,7 @@ import { FormPreviewComponent } from './pages/form-preview/form-preview.componen
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'form-builder',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
@@ -20,6 +20,14 @@ const routes: Routes = [
   },
   { path: 'form-preview/:id',
     component: FormPreviewComponent 
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule)
   }
 
 

@@ -1,4 +1,4 @@
-package io.iovision.FromBuilder;
+package io.iovision.FromBuilder.controller;
 
 import io.iovision.FromBuilder.model.Formulaire;
 import io.iovision.FromBuilder.service.FormulaireService;

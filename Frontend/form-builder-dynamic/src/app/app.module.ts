@@ -9,8 +9,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { FormListComponent } from './pages/form-list/form-list.component';
 import { FormBuilderComponent } from './pages/form-builder/form-builder.component';
 import { FormPreviewComponent } from './pages/form-preview/form-preview.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {ReactiveFormsModule } from '@angular/forms';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,7 +28,9 @@ import {ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule
 // Add this line
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },    {
+     provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
