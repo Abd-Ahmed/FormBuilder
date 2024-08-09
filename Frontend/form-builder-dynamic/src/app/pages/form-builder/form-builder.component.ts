@@ -1,38 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormulaireService } from '../../services/formulaire.service';
 import { Router } from '@angular/router';
-import { FormField } from 'src/model/FormField';
+import { FormField } from 'src/app/model/FormField';
+import { FormTemplate } from 'src/app/model/FormTemplate';
 
 @Component({
   selector: 'app-form-builder',
   templateUrl: './form-builder.component.html',
   styleUrls: ['./form-builder.component.scss'],
 })
-export class FormBuilderComponent {
+export class FormBuilderComponent implements OnInit {
   formName: string = '';
   description: string = '';
   formFields: FormField[] = [];
-  availableFieldTypes = [
-    'text', 'number', 'email', 'password', 'date', 'textarea', 
-    'url', 'file', 'dropdown', 'radio', 'checkbox'
-  ];
+  availableTemplates: FormTemplate[] = [];
 
   constructor(private FS: FormulaireService, private router: Router) {}
 
-  addField(fieldType: string) {
-    const newField: FormField = {
-      fieldType: fieldType,
-      label: '',
-      placeholder: this.shouldHavePlaceholder(fieldType) ? '' : undefined,
-      options: this.shouldHaveOptions(fieldType) ? [] : undefined,
-      required: false,
-      minLength: fieldType === 'text' || fieldType === 'textarea' ? 0 : undefined,
-      maxLength: fieldType === 'text' || fieldType === 'textarea' ? undefined : undefined,
-      min: fieldType === 'number' ? undefined : undefined,
-      max: fieldType === 'number' ? undefined : undefined,
-      pattern: undefined
-    };
-    this.formFields.push(newField);
+  ngOnInit() {
+    this.loadFormTemplates();
+    console.log('Initial formFields:', this.formFields);
+    this.debugLog();
+
+  }
+  loadFormTemplates() {
+    this.FS.getFormTemplates().subscribe(
+      (templates: FormTemplate[]) => {
+        this.availableTemplates = templates;
+        console.log('Available templates:', this.availableTemplates);
+      },
+      (error) => {
+        console.error('Error loading form templates:', error);
+      }
+    );
   }
 
   removeField(index: number) {
@@ -51,23 +51,45 @@ export class FormBuilderComponent {
     });
   }
 
+  shouldHavePlaceholder(fieldType: string): boolean {
+    return ['Text', 'Number', 'Email', 'Password', 'URL', 'Text Area'].includes(fieldType);
+  }
+  
+  shouldHaveOptions(fieldType: string): boolean {
+    return ['Dropdown', 'Radio', 'Checkbox'].includes(fieldType);
+  }
+  
+  hasLengthValidation(fieldType: string): boolean {
+    return ['Text', 'Text Area', 'Password'].includes(fieldType);
+  }
+  
+  hasNumberValidation(fieldType: string): boolean {
+    return fieldType === 'Number';
+  }
+  
   updateOptions(field: FormField, optionsString: string) {
     field.options = optionsString.split(',').map(option => option.trim());
   }
-
-  shouldHavePlaceholder(fieldType: string): boolean {
-    return ['text', 'number', 'email', 'password', 'url', 'textarea'].includes(fieldType);
+  
+  addField(templateCode: string) {
+    const template = this.availableTemplates.find(t => t.code === templateCode);
+    if (template) {
+      const newField: FormField = {
+        template: template,
+        label: '',
+        placeholder: this.shouldHavePlaceholder(template.type) ? '' : undefined,
+        options: this.shouldHaveOptions(template.type) ? [] : undefined,
+        required: false,
+        minLength: this.hasLengthValidation(template.type) ? 0 : undefined,
+        maxLength: this.hasLengthValidation(template.type) ? undefined : undefined,
+        min: this.hasNumberValidation(template.type) ? undefined : undefined,
+        max: this.hasNumberValidation(template.type) ? undefined : undefined,
+      };
+      this.formFields.push(newField);
+    }
   }
-
-  shouldHaveOptions(fieldType: string): boolean {
-    return ['dropdown', 'radio', 'checkbox'].includes(fieldType);
-  }
-
-  hasLengthValidation(fieldType: string): boolean {
-    return ['text', 'textarea', 'password'].includes(fieldType);
-  }
-
-  hasNumberValidation(fieldType: string): boolean {
-    return fieldType === 'number';
+  debugLog() {
+    console.log('Form Fields:', this.formFields);
+    console.log('Available Templates:', this.availableTemplates);
   }
 }

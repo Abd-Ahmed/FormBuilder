@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormulaireService } from '../../services/formulaire.service';
-import { Formulaire } from 'src/model/Formulaire';
+import { Formulaire } from 'src/app/model/Formulaire';
+import { FormEditModalComponent } from '../form-edit-modal/form-edit-modal.component';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-form-list',
@@ -10,7 +12,7 @@ import { Formulaire } from 'src/model/Formulaire';
 export class FormListComponent implements OnInit {
   formulaires: Formulaire[] = [];
 
-  constructor(private FS: FormulaireService) {}
+  constructor(private FS: FormulaireService,    private modalCtrl: ModalController  ) {}
 
   ngOnInit() {
     this.loadFormulaires();
@@ -36,5 +38,21 @@ export class FormListComponent implements OnInit {
         console.error('Error deleting formulaire', error);
       }
     );
+  }
+
+  async editFormulaire(formulaire: Formulaire) {
+    const modal = await this.modalCtrl.create({
+      component: FormEditModalComponent,
+      componentProps: {
+        formulaire: { ...formulaire }
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data) {
+      this.loadFormulaires();
+    }
   }
 }

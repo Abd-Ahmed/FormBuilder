@@ -12,12 +12,14 @@ import { FormPreviewComponent } from './pages/form-preview/form-preview.componen
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { FormEditModalComponent } from './pages/form-edit-modal/form-edit-modal.component';
 @NgModule({
   declarations: [
     AppComponent,
     FormListComponent,
     FormBuilderComponent,
-    FormPreviewComponent
+    FormPreviewComponent,
+    FormEditModalComponent,
   ],
   imports: [
     BrowserModule, 
@@ -25,7 +27,9 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    IonicModule.forRoot(),
+
 // Add this line
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },    {

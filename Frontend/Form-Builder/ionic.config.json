@@ -1,7 +1,0 @@
-{
-  "name": "form-builder",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular"
-}

@@ -1,36 +1,130 @@
+// Global dark theme styles
+.dark-theme {
+  --ion-background-color: #121212;
+  --ion-text-color: #ffffff;
+  --ion-border-color: #333333;
+
+  .form-container {
+    background-color: #1e1e1e;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.form-title {
+  font-size: 24px;
+  color: #ffffff;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.form-description {
+  font-size: 16px;
+  color: #b0b0b0;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.form-fields {
+  margin-bottom: 20px;
+}
+
 .form-field {
-    --padding-start: 0;
-    --padding-end: 0;
-    --inner-padding-end: 0;
-  
+  margin-bottom: 24px;  // Increased from 15px
+}
+
+ion-item {
+  --background: #2a2a2a;
+  --border-radius: 8px;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --min-height: 50px;
+  --border-color: #444444;
+  --highlight-height: 0;  // Remove the highlight line
+}
+
+ion-input, ion-textarea, ion-select {
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --padding-top: 10px;  // Add top padding
+  --padding-bottom: 10px;  // Add bottom padding
+  --placeholder-color: #888888;
+  --placeholder-opacity: 0.8;
+}
+
+ion-label {
+  font-weight: 500;
+  color: #ffffff;
+  margin-bottom: 8px;  // Add space below the label
+}
+
+// Style for floating labels
+ion-item.item-has-focus ion-label[position="floating"],
+ion-item.item-has-value ion-label[position="floating"] {
+  transform: translateY(-14px) scale(0.8);  // Adjust the Y-translation
+}
+
+ion-item ion-label[position="floating"] {
+  transform: translateY(8px) scale(1);  // Start position
+}
+
+.radio-group {
+  ion-list-header {
+    padding-left: 0;
     ion-label {
-      margin-bottom: 8px;
-    }
-  
-    ion-input, ion-textarea, ion-datetime, ion-range, ion-select {
-      --padding-start: 0;
-      margin-top: 8px;
-    }
-  
-    ion-radio-group {
-      margin-top: 8px;
-    }
-  
-    ion-checkbox {
-      margin-top: 16px;
+      font-weight: 500;
+      color: #ffffff;
     }
   }
-  
-  ion-list {
-    background: transparent;
-  }
-  
   ion-item {
-    --background: transparent;
-    --border-color: var(--ion-color-medium);
-    --border-width: 0 0 1px 0;
-    --border-style: solid;
     --padding-start: 0;
-    --inner-padding-end: 0;
-    margin-bottom: 16px;
   }
+}
+
+.submit-button {
+  margin-top: 20px;
+
+  ion-button {
+    --background: #3880ff;
+    --background-activated: #3171e0;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 10px rgba(56, 128, 255, 0.3);
+    font-weight: 600;
+  }
+}
+
+// Styles for specific input types
+ion-checkbox {
+  --background-checked: #3880ff;
+  --border-color-checked: #3880ff;
+  --checkmark-color: #ffffff;
+}
+
+ion-radio {
+  --color-checked: #3880ff;
+}
+
+ion-select::part(icon) {
+  color: #3880ff;
+}
+
+// Add some responsiveness
+@media (max-width: 480px) {
+  .form-container {
+    padding: 15px;
+  }
+
+  .form-title {
+    font-size: 20px;
+  }
+
+  .form-description {
+    font-size: 14px;
+  }
+}

@@ -12,6 +12,7 @@
         <p>{{ formulaire.description }}</p>
       </ion-label>
       <ion-button slot="end" [routerLink]="['/form-preview', formulaire.id]">Preview</ion-button>
+      <ion-button slot="end" (click)="editFormulaire(formulaire)">Edit</ion-button>
       <ion-button slot="end" (click)="deleteFormulaire(formulaire.id)">Delete</ion-button>
     </ion-item>
   </ion-list>

@@ -1,5 +1,6 @@
 package io.iovision.FromBuilder.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,9 +26,12 @@ public class Formulaire implements Serializable {
 
     private String description;
 
-    @ElementCollection
-    @CollectionTable(name = "form_fields", joinColumns = @JoinColumn(name = "form_id"))
+
+    @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<FormField> formFields = new ArrayList<>();
 
+    @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Submission> submissions = new ArrayList<>();
     // Constructors, getters, setters, and other methods
 }

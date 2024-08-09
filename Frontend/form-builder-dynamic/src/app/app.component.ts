@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AuthService } from './services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -11,5 +13,11 @@ export class AppComponent {
     { title: 'Form List', url: '/form-list', icon: 'list' },
   ];
 
-  constructor() {}
+  constructor(private AS : AuthService, private router : Router) {}
+
+  logout() {
+    this.AS.logout(); // This method should handle your logout logic, e.g., clearing tokens, etc.
+    this.router.navigate(['/login']); // Navigate to the login page after logout
+  }
+
 }

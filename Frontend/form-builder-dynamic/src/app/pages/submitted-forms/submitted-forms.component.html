@@ -1,0 +1,14 @@
+<ion-content>
+  <ion-list>
+    <ion-list-header>
+      <ion-label>Your Submitted Forms</ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let submission of submissions">
+      <ion-label>
+        <h2>{{ submission.form.formName }}</h2>
+        <p>Submitted on: {{ submission.createdAt | date:'medium' }}</p>
+      </ion-label>
+      <ion-button slot="end" (click)="viewSubmission(submission.id)">View</ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

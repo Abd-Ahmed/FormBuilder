@@ -41,4 +41,9 @@ public class FormulaireController {
         formulaireService.deleteFormulaire(id);
         return ResponseEntity.ok().build();
     }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Formulaire> updateFormulaire(@PathVariable("id") Long id, @RequestBody Formulaire formulaire) {
+        Formulaire updatedFormulaire = formulaireService.updateFormulaire(id, formulaire);
+        return ResponseEntity.ok(updatedFormulaire);
+    }
 }

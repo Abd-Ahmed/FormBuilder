@@ -9,8 +9,8 @@ import { ToastController } from '@ionic/angular';
   styleUrls: ['./register.page.scss'],
 })
 export class RegisterPage {
-  firstName: string = '';
-  lastName: string = '';
+  firstname: string = '';
+  lastname: string = '';
   email: string = '';
   password: string = '';
 
@@ -22,7 +22,7 @@ export class RegisterPage {
 
   async register() {
     try {
-      const result = await this.authService.register(this.firstName, this.lastName, this.email, this.password);
+      const result = await this.authService.register(this.firstname, this.lastname, this.email, this.password).toPromise();
       console.log('Registration successful', result);
       this.presentToast('Registration successful. Please login.');
       this.router.navigate(['/login']);
