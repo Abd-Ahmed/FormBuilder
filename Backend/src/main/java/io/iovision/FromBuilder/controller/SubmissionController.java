@@ -1,14 +1,20 @@
 package io.iovision.FromBuilder.controller;
 
 import io.iovision.FromBuilder.model.Submission;
+import io.iovision.FromBuilder.model.User;
 import io.iovision.FromBuilder.service.SubmissionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("submissions")
+@CrossOrigin(origins = "http://localhost:8101")
+@RequestMapping("/submission")
 public class SubmissionController {
 
     private final SubmissionService submissionService;
@@ -17,15 +23,18 @@ public class SubmissionController {
         this.submissionService = submissionService;
     }
 
-    @PostMapping
-    public ResponseEntity<Submission> saveSubmission(@RequestBody Submission submission) {
-        Submission savedSubmission = submissionService.saveSubmission(submission);
-        return ResponseEntity.ok(savedSubmission);
+    @PostMapping("/create/{formId}")
+    public ResponseEntity<Submission> createSubmission(@PathVariable Long formId,
+                                                       @RequestBody Map<String, String> formData,
+                                                       @AuthenticationPrincipal UserDetails userDetails) {
+        User user = (User) userDetails;
+        Submission submission = submissionService.saveSubmission(formId, user.getId(), formData);
+        return ResponseEntity.status(HttpStatus.CREATED).body(submission);
     }
 
-    @GetMapping("/{userId}/{formId}")
-    public ResponseEntity<List<Submission>> getSubmissions(@PathVariable Long userId, @PathVariable Long formId) {
-        List<Submission> submissions = submissionService.getSubmissions(userId, formId);
+    @GetMapping("/form/{formId}")
+    public ResponseEntity<List<Submission>> getSubmissionsByFormId(@PathVariable Long formId) {
+        List<Submission> submissions = submissionService.getSubmissionsByFormId(formId);
         return ResponseEntity.ok(submissions);
     }
 
@@ -33,11 +42,5 @@ public class SubmissionController {
     public ResponseEntity<Submission> getSubmissionById(@PathVariable Long id) {
         Submission submission = submissionService.getSubmissionById(id);
         return ResponseEntity.ok(submission);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSubmission(@PathVariable Long id) {
-        submissionService.deleteSubmission(id);
-        return ResponseEntity.noContent().build();
     }
 }

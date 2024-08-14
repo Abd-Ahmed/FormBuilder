@@ -53,6 +53,7 @@
                 <ion-select-option *ngFor="let option of field.options" [value]="option">{{ option }}</ion-select-option>
               </ion-select>
             </ion-item>
+            
 
             <ion-radio-group *ngSwitchCase="'Radio'" [formControlName]="field.label" class="radio-group">
               <ion-list-header>
@@ -74,7 +75,10 @@
       </div>
 
       <div class="submit-button">
-        <ion-button expand="block" type="submit" [disabled]="!previewForm.valid">Submit</ion-button>
+        <ion-button expand="block" type="submit" [disabled]="!previewForm.valid || isSubmitting">
+          <ion-spinner *ngIf="isSubmitting"></ion-spinner>
+          <span *ngIf="!isSubmitting">Submit</span>
+        </ion-button>
       </div>
     </form>
   </div>

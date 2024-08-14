@@ -1,12 +1,16 @@
 package io.iovision.FromBuilder.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 @Entity
 @Getter
 @Setter
@@ -18,7 +22,6 @@ public class FormField {
 
     @ManyToOne
     @JoinColumn(name = "form_id", nullable = false)
-    @JsonBackReference
     private Formulaire form;
 
     @ManyToOne
@@ -35,4 +38,3 @@ public class FormField {
     private Integer max;
     private String pattern;
 }
-

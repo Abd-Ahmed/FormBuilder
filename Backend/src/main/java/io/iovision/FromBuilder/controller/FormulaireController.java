@@ -3,6 +3,7 @@ package io.iovision.FromBuilder.controller;
 import io.iovision.FromBuilder.model.Formulaire;
 import io.iovision.FromBuilder.service.FormulaireService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,7 @@ public class FormulaireController {
         return ResponseEntity.ok(formulaire);
     }
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Formulaire> createFormulaire(@RequestBody Formulaire formulaire) {
         Formulaire createdFormulaire = formulaireService.saveFormulaire(formulaire);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdFormulaire);

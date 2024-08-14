@@ -1,0 +1,220 @@
+I have an ionic project with sping boot backend, I created the admin side and it run goods, it consist of 2 main compnent, form builder where the admin will build a form but choosing the field he want , and then save it, and have the form list where he can see the forms he created it and can delete and edit it, Now I want to implent the user side where he can see thoses forms and open it as a real form and then put his data and save it, i created the backend of the submission, i'll give you the code below, anyway, i want you to do these things : 
+1) create for me 3 compenntts, form list for the user , form submit where he will see the form he clicked it and save it, and a compentn where he can see the forms he saved and see his responese, and i want when the admin connect ( i have in the user a role admin or user) he sees the builder and the list (   public appPages = [
+    { title: 'Form Builder', url: '/form-builder', icon: 'create' },
+    { title: 'Form List', url: '/form-list', icon: 'list' },
+  ];) i have this in the app compnent; 
+and if the role is user he sees differnt thing with diffrent view where he sees the user form list and when he clicks he sees the form and submit it and where he can see his saves specif for each user, you wil see below the controller and service of the submision, and i'll attach how i'm handling the building of the forms, and a code where i can see the forms so you can inspire form it :
+@RestController
+@RequestMapping("submissions")
+public class SubmissionController {
+
+    private final SubmissionService submissionService;
+
+    public SubmissionController(SubmissionService submissionService) {
+        this.submissionService = submissionService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Submission> saveSubmission(@RequestBody Submission submission) {
+        Submission savedSubmission = submissionService.saveSubmission(submission);
+        return ResponseEntity.ok(savedSubmission);
+    }
+
+    @GetMapping("/{userId}/{formId}")
+    public ResponseEntity<List<Submission>> getSubmissions(@PathVariable Long userId, @PathVariable Long formId) {
+        List<Submission> submissions = submissionService.getSubmissions(userId, formId);
+        return ResponseEntity.ok(submissions);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Submission> getSubmissionById(@PathVariable Long id) {
+        Submission submission = submissionService.getSubmissionById(id);
+        return ResponseEntity.ok(submission);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSubmission(@PathVariable Long id) {
+        submissionService.deleteSubmission(id);
+        return ResponseEntity.noContent().build();
+    }
+}@Service
+public class SubmissionService {
+
+    private final SubmissionRepo submissionRepo;
+    private final FormulaireService formulaireService;
+
+    public SubmissionService(SubmissionRepo submissionRepo, FormulaireService formulaireService) {
+        this.submissionRepo = submissionRepo;
+        this.formulaireService = formulaireService;
+    }
+
+    @Transactional
+    public Submission saveSubmission(Submission submission) {
+        // Ensure the form exists
+        formulaireService.getFormulaireById(submission.getForm().getId());
+        return submissionRepo.save(submission);
+    }
+
+    public List<Submission> getSubmissions(Long userId, Long formId) {
+        return submissionRepo.findByUserIdAndFormId(userId, formId);
+    }
+
+    public Submission getSubmissionById(Long id) {
+        return submissionRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Submission not found with id: " + id));
+    }
+
+    @Transactional
+    public void deleteSubmission(Long id) {
+        submissionRepo.deleteById(id);
+    }
+} xport class FormBuilderComponent implements OnInit {
+  formName: string = '';
+  description: string = '';
+  formFields: FormField[] = [];
+  availableTemplates: FormTemplate[] = [];
+
+  constructor(private FS: FormulaireService, private router: Router) {}
+
+  ngOnInit() {
+    this.loadFormTemplates();
+    console.log('Initial formFields:', this.formFields);
+    this.debugLog();
+
+  }
+  loadFormTemplates() {
+    this.FS.getFormTemplates().subscribe(
+      (templates: FormTemplate[]) => {
+        this.availableTemplates = templates;
+        console.log('Available templates:', this.availableTemplates);
+      },
+      (error) => {
+        console.error('Error loading form templates:', error);
+      }
+    );
+  }
+
+  removeField(index: number) {
+    this.formFields.splice(index, 1);
+  }
+
+  saveForm() {
+    const formToSave = {
+      formName: this.formName,
+      description: this.description,
+      formFields: this.formFields
+    };
+
+    this.FS.createFormulaire(formToSave).subscribe(() => {
+      this.router.navigate(['/form-list']);
+    });
+  }
+
+  shouldHavePlaceholder(fieldType: string): boolean {
+    return ['Text', 'Number', 'Email', 'Password', 'URL', 'Text Area'].includes(fieldType);
+  }
+  
+  shouldHaveOptions(fieldType: string): boolean {
+    return ['Dropdown', 'Radio', 'Checkbox'].includes(fieldType);
+  }
+  
+  hasLengthValidation(fieldType: string): boolean {
+    return ['Text', 'Text Area', 'Password'].includes(fieldType);
+  }
+  
+  hasNumberValidation(fieldType: string): boolean {
+    return fieldType === 'Number';
+  }
+  
+  updateOptions(field: FormField, optionsString: string) {
+    field.options = optionsString.split(',').map(option => option.trim());
+  }
+  
+  addField(templateCode: string) {
+    const template = this.availableTemplates.find(t => t.code === templateCode);
+    if (template) {
+      const newField: FormField = {
+        template: template,
+        label: '',
+        placeholder: this.shouldHavePlaceholder(template.type) ? '' : undefined,
+        options: this.shouldHaveOptions(template.type) ? [] : undefined,
+        required: false,
+        minLength: this.hasLengthValidation(template.type) ? 0 : undefined,
+        maxLength: this.hasLengthValidation(template.type) ? undefined : undefined,
+        min: this.hasNumberValidation(template.type) ? undefined : undefined,
+        max: this.hasNumberValidation(template.type) ? undefined : undefined,
+      };
+      this.formFields.push(newField);
+    }
+  }
+  debugLog() {
+    console.log('Form Fields:', this.formFields);
+    console.log('Available Templates:', this.availableTemplates);
+  }
+}export class FormPreviewComponent implements OnInit {
+  formulaire!: Formulaire;
+  previewForm!: FormGroup;
+
+  constructor(
+    private route: ActivatedRoute,
+    private FS: FormulaireService,
+    private formBuilder: FormBuilder
+  ) {}
+
+  ngOnInit() {
+    const formId = this.route.snapshot.paramMap.get('id');
+    this.loadForm(Number(formId));
+  }
+
+  loadForm(formId: number) {
+    this.FS.getFormulaireById(formId).subscribe(
+      (form: Formulaire) => {
+        this.formulaire = form;
+        this.buildForm();
+      },
+      (error) => {
+        console.error('Error loading form:', error);
+      }
+    );
+  }
+
+  buildForm() {
+    const formGroup: { [key: string]: AbstractControl } = {};
+    this.formulaire.formFields.forEach(field => {
+      const validators = [];
+      if (field.required) validators.push(Validators.required);
+      if (field.minLength) validators.push(Validators.minLength(field.minLength));
+      if (field.maxLength) validators.push(Validators.maxLength(field.maxLength));
+      if (field.min) validators.push(Validators.min(field.min));
+      if (field.max) validators.push(Validators.max(field.max));
+      if (field.template.type === 'Email') validators.push(Validators.email);
+
+      formGroup[field.label] = this.formBuilder.control('', validators);
+    });
+    this.previewForm = this.formBuilder.group(formGroup);
+  }
+
+  onSubmit() {
+    if (this.previewForm.valid) {
+      console.log('Form submitted:', this.previewForm.value);
+      // Here you can add logic to handle the form submission
+    } else {
+      console.log('Form is invalid');
+    }
+  }
+
+  getFieldType(fieldType: string): string {
+    switch (fieldType) {
+      case 'Number':
+        return 'number';
+      case 'Email':
+        return 'email';
+      case 'Password':
+        return 'password';
+      case 'URL':
+        return 'url';
+      default:
+        return 'text';
+    }
+  }
+}

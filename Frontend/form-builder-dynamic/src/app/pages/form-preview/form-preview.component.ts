@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormulaireService } from '../../services/formulaire.service';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Formulaire } from 'src/app/model/Formulaire';
-import { FormField } from 'src/app/model/FormField';
+import { SubmissionService } from 'src/app/services/submission.service';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-form-preview',
@@ -13,11 +14,15 @@ import { FormField } from 'src/app/model/FormField';
 export class FormPreviewComponent implements OnInit {
   formulaire!: Formulaire;
   previewForm!: FormGroup;
+  isSubmitting = false;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private FS: FormulaireService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private submissionService: SubmissionService,
+    private toastController: ToastController
   ) {}
 
   ngOnInit() {
@@ -55,11 +60,33 @@ export class FormPreviewComponent implements OnInit {
 
   onSubmit() {
     if (this.previewForm.valid) {
-      console.log('Form submitted:', this.previewForm.value);
-      // Here you can add logic to handle the form submission
+      this.isSubmitting = true;
+      const formData = this.previewForm.value;
+
+      this.submissionService.saveSubmission(this.formulaire.id, formData).subscribe(
+        (response) => {
+          this.isSubmitting = false;
+          this.presentToast('Submission saved successfully');
+          this.router.navigate(['/form-list']);
+        },
+        (error) => {
+          this.isSubmitting = false;
+          console.error('Error saving submission:', error);
+          this.presentToast('Error saving submission. Please try again.');
+        }
+      );
     } else {
-      console.log('Form is invalid');
+      this.presentToast('Please fill all required fields');
     }
+  }
+
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      position: 'bottom'
+    });
+    toast.present();
   }
 
   getFieldType(fieldType: string): string {

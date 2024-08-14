@@ -5,17 +5,22 @@ import io.iovision.FromBuilder.auth.AuthentifcationRequest;
 import io.iovision.FromBuilder.auth.AuthentificationResponse;
 import io.iovision.FromBuilder.auth.AuthentificationService;
 import io.iovision.FromBuilder.auth.RegisterRequest;
+import io.iovision.FromBuilder.model.User;
+import io.iovision.FromBuilder.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthentifcationController {
     private final AuthentificationService service;
+    private final UserService userService;
 
     @CrossOrigin(origins = "http://localhost:8100")
     @PostMapping("/register")
@@ -54,6 +59,14 @@ public class AuthentifcationController {
         }
         return ResponseEntity.badRequest().build();
     }
-
+    @GetMapping("/current-user")
+    public ResponseEntity<Optional<User>> getCurrentUser() {
+        Optional<User> currentUser = userService.getCurrentUser();
+        if (currentUser != null) {
+            return ResponseEntity.ok(currentUser);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }

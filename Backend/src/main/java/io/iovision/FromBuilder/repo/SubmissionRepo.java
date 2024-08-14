@@ -8,5 +8,4 @@ import java.util.List;
 
 @Repository
 public interface SubmissionRepo extends JpaRepository<Submission, Long> {
-    List<Submission> findByUserIdAndFormId(Long userId, Long formId);
 }

@@ -1,10 +1,17 @@
 package io.iovision.FromBuilder.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import java.time.LocalDateTime;
 
+import java.time.LocalDateTime;
+import java.util.Map;
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 @Entity
 @Getter
 @Setter
@@ -15,22 +22,20 @@ public class Submission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "form_id", nullable = false)
     private Formulaire form;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user; // Assuming you have a User entity
-
-    @Column(columnDefinition = "jsonb")
-    private String formData;
+    private User submittedBy;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime submittedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
+    @ElementCollection
+    @CollectionTable(name = "submission_data", joinColumns = @JoinColumn(name = "submission_id"))
+    @MapKeyColumn(name = "field_name")
+    @Column(name = "field_value")
+    private Map<String, String> formData;
 }

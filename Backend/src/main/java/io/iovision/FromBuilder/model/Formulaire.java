@@ -1,19 +1,23 @@
 package io.iovision.FromBuilder.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 @Entity
 @Getter
 @Setter
 @Table(name = "formulaire")
-public class Formulaire implements Serializable {
+public class Formulaire {
 
     @Id
     @SequenceGenerator(name = "formulaire_seq", sequenceName = "formulaire_seq", allocationSize = 1)
@@ -26,12 +30,9 @@ public class Formulaire implements Serializable {
 
     private String description;
 
-
     @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private List<FormField> formFields = new ArrayList<>();
 
     @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Submission> submissions = new ArrayList<>();
-    // Constructors, getters, setters, and other methods
 }
