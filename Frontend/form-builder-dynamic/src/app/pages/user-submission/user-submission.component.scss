@@ -1,0 +1,45 @@
+ion-toolbar {
+    --background: #1e1e1e; /* Dark background for toolbar */
+    --color: #ffffff;       /* Light text for contrast */
+  }
+  
+  ion-content {
+    background-color: #121212; /* Dark background for content */
+    color: #e0e0e0;            /* Light text color for readability */
+  
+    ion-list {
+      ion-item {
+        --background: #2a2a2a; /* Darker background for list items */
+        margin-bottom: 10px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+  
+        &:hover {
+          --background: #3a3a3a; /* Slightly lighter hover effect */
+        }
+  
+        ion-label {
+          h2 {
+            font-size: 18px;
+            font-weight: bold;
+          }
+  
+          p {
+            font-size: 14px;
+            color: #b0b0b0; /* Slightly lighter text for dates */
+          }
+        }
+      }
+    }
+  
+    ion-progress-bar {
+      margin-bottom: 20px;
+    }
+  
+    .ion-text-center {
+      margin-top: 30px;
+      font-size: 16px;
+      color: #b0b0b0; /* Neutral color for "No submissions yet" text */
+    }
+  }
+  

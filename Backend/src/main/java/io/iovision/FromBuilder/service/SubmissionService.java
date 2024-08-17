@@ -53,4 +53,12 @@ public class SubmissionService {
         return submissionRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Submission not found with id: " + id));
     }
+
+    public List<Submission> getSubmissionsByUserId(Long userId) {
+        User user = userRepo.findById(userId)
+                    .orElseThrow(() -> new EntityNotFoundException("Submission not found with id: " + userId));
+        return user.getSubmissions();
+
+
+    }
 }

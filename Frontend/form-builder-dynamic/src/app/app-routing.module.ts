@@ -3,6 +3,8 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { FormBuilderComponent } from './pages/form-builder/form-builder.component';
 import { FormListComponent } from './pages/form-list/form-list.component';
 import { FormPreviewComponent } from './pages/form-preview/form-preview.component';
+import { UserFormListComponent } from './pages/user-form-list/user-form-list.component';
+import { UserSubmissionComponent } from './pages/user-submission/user-submission.component';
 
 const routes: Routes = [
   {
@@ -22,7 +24,14 @@ const routes: Routes = [
   { path: 'form-preview/:id',
     component: FormPreviewComponent 
   },
-
+  {
+    path: 'user-form-list',
+    component: UserFormListComponent
+  },
+  {
+    path: 'user-submissions',
+    component: UserSubmissionComponent
+  },
 
   {
     path: 'login',

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormulaireService } from '../../services/formulaire.service';
-import { Formulaire } from 'src/app/model/Formulaire';
+import { Formulaire } from 'app/model/Formulaire';
 import { FormEditModalComponent } from '../form-edit-modal/form-edit-modal.component';
 import { ModalController } from '@ionic/angular';
 

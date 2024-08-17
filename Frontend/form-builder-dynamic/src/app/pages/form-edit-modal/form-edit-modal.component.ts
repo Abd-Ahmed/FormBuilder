@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Formulaire } from 'src/app/model/Formulaire';
+import { Formulaire } from 'app/model/Formulaire';
 import { FormulaireService } from '../../services/formulaire.service';
 
 @Component({

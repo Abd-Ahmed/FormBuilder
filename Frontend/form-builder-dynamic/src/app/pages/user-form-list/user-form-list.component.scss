@@ -1,0 +1,59 @@
+ion-item {
+    --background: #ffffff; /* Background color of the item */
+    --border-color: #e0e0e0; /* Border color of the item */
+    --border-width: 1px; /* Border width of the item */
+    --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle 3D effect */
+    border-radius: 8px; /* Rounded corners */
+    margin-bottom: 10px; /* Space between items */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+  }
+  
+  ion-item:hover {
+    --background: #f9f9f9; /* Lighter background on hover */
+    transform: scale(1.02); /* Slightly enlarge item on hover */
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+  }
+  
+  ion-item:active {
+    transform: scale(0.98); /* Slightly shrink item on click */
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  ion-item {
+    animation: fadeIn 0.5s ease-out;
+  }
+  /* Dark Theme for Available Forms Page */
+ion-content {
+    --background: #121212;
+  }
+  
+  ion-item {
+    --background: #1e1e1e;
+    --border-color: #333333;
+    color: #ffffff;  // White text color
+    transition: background 0.3s ease;
+  }
+  
+  ion-item:hover {
+    --background: #333333;
+  }
+  
+  /* Optional: Add animations */
+  ion-item {
+    position: relative;
+    transition: transform 0.2s ease;
+  }
+  
+  ion-item:hover {
+    transform: scale(1.02);
+  }
+  

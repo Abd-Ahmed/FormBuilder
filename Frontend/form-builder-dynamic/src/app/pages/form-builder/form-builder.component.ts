@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormulaireService } from '../../services/formulaire.service';
 import { Router } from '@angular/router';
-import { FormField } from 'src/app/model/FormField';
-import { FormTemplate } from 'src/app/model/FormTemplate';
+import { FormField } from 'app/model/FormField';
+import { FormTemplate } from 'app/model/FormTemplate';
 
 @Component({
   selector: 'app-form-builder',

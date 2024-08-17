@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormulaireService } from '../../services/formulaire.service';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
-import { Formulaire } from 'src/app/model/Formulaire';
-import { SubmissionService } from 'src/app/services/submission.service';
+import { Formulaire } from 'app/model/Formulaire';
+import { SubmissionService } from 'app/services/submission.service';
 import { ToastController } from '@ionic/angular';
 
 @Component({

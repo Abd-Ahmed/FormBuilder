@@ -37,6 +37,11 @@ public class SubmissionController {
         List<Submission> submissions = submissionService.getSubmissionsByFormId(formId);
         return ResponseEntity.ok(submissions);
     }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Submission>> getSubmissionsByUserId(@PathVariable Long userId) {
+        List<Submission> submissions = submissionService.getSubmissionsByUserId(userId);
+        return ResponseEntity.ok(submissions);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Submission> getSubmissionById(@PathVariable Long id) {

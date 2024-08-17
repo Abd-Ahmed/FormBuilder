@@ -14,4 +14,13 @@ export class SubmissionService {
   saveSubmission(formId: number, formData: { [key: string]: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/create/${formId}`, formData);
   }
+  getUserSubmissions(userId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/user/${userId}`);
+  }
+  getSubmissionsByForm(formId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/form/${formId}`);
+  }
+  getSubmission(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
+  }
 }

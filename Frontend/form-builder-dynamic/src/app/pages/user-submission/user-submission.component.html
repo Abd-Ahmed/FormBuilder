@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>My Submissions</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-progress-bar type="indeterminate" *ngIf="loading"></ion-progress-bar>
+
+  <ion-list *ngIf="!loading && submissions.length > 0">
+    <ion-item *ngFor="let submission of submissions" (click)="viewSubmission(submission)">
+      <ion-label>
+        <h2>{{ submission.form.formName }}</h2>
+        <p>Submitted on: {{ submission.submittedAt | date:'medium' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-text color="medium" *ngIf="submissions.length === 0">
+    <h2 class="ion-text-center">No submissions yet</h2>
+  </ion-text>
+</ion-content>
