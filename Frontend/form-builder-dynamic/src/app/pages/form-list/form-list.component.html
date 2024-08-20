@@ -11,9 +11,17 @@
         <h2>{{ formulaire.formName }}</h2>
         <p>{{ formulaire.description }}</p>
       </ion-label>
-      <ion-button slot="end" [routerLink]="['/form-preview', formulaire.id]">Preview</ion-button>
-      <ion-button slot="end" (click)="editFormulaire(formulaire)">Edit</ion-button>
-      <ion-button slot="end" (click)="deleteFormulaire(formulaire.id)">Delete</ion-button>
+      <ion-button fill="clear" slot="end" (click)="editFormulaire(formulaire)">
+        <ion-icon name="pencil"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" slot="end" (click)="deleteFormulaire(formulaire.id)">
+        <ion-icon name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item *ngIf="formulaires.length === 0">
+      <ion-label>
+        <h2 class="ion-text-center">No forms available</h2>
+      </ion-label>
     </ion-item>
   </ion-list>
 </ion-content>

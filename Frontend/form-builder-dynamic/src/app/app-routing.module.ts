@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard'; // Import the guard
 import { FormBuilderComponent } from './pages/form-builder/form-builder.component';
 import { FormListComponent } from './pages/form-list/form-list.component';
 import { FormPreviewComponent } from './pages/form-preview/form-preview.component';
@@ -15,38 +16,40 @@ const routes: Routes = [
   {
     path: 'form-builder',
     component: FormBuilderComponent,
+    canActivate: [AuthGuard] // Protect this route with the AuthGuard
   },
   {
     path: 'form-list',
     component: FormListComponent,
+    canActivate: [AuthGuard] // Protect this route with the AuthGuard
   },
-  
-  { path: 'form-preview/:id',
-    component: FormPreviewComponent 
+  {
+    path: 'form-preview/:id',
+    component: FormPreviewComponent,
+    canActivate: [AuthGuard] // Protect this route with the AuthGuard
   },
   {
     path: 'user-form-list',
-    component: UserFormListComponent
+    component: UserFormListComponent,
+    canActivate: [AuthGuard] // Protect this route with the AuthGuard
   },
   {
     path: 'user-submissions',
-    component: UserSubmissionComponent
+    component: UserSubmissionComponent,
+    canActivate: [AuthGuard] // Protect this route with the AuthGuard
   },
-
   {
     path: 'login',
-    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+    loadChildren: () => import('./login/login.module').then(m => m.LoginPageModule)
   },
   {
     path: 'register',
-    loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule)
+    loadChildren: () => import('./register/register.module').then(m => m.RegisterPageModule)
   }
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
-  ],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

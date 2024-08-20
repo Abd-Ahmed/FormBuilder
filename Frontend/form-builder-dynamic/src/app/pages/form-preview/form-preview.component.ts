@@ -67,7 +67,8 @@ export class FormPreviewComponent implements OnInit {
         (response) => {
           this.isSubmitting = false;
           this.presentToast('Submission saved successfully');
-          this.router.navigate(['/form-list']);
+          this.submissionService.triggerRefresh(); // Trigger refresh
+          this.router.navigateByUrl('/user-submissions', { replaceUrl: true }); // Avoid unnecessary navigation issues
         },
         (error) => {
           this.isSubmitting = false;

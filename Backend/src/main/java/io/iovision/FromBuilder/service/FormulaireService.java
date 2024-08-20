@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class FormulaireService {
@@ -46,7 +48,6 @@ public class FormulaireService {
     public void deleteFormulaire(Long id) {
         formulaireRepo.deleteById(id);
     }
-
     @Transactional
     public Formulaire updateFormulaire(Long id, Formulaire formulaire) {
         Formulaire existingFormulaire = formulaireRepo.findById(id)
@@ -55,16 +56,34 @@ public class FormulaireService {
         existingFormulaire.setFormName(formulaire.getFormName());
         existingFormulaire.setDescription(formulaire.getDescription());
 
-        // Remove old form fields and add new ones
+        // Clear existing fields
         existingFormulaire.getFormFields().clear();
+
+        // Add updated fields
         for (FormField field : formulaire.getFormFields()) {
-            field.setForm(existingFormulaire);
+            FormField newField = new FormField();
+            newField.setForm(existingFormulaire);
+
+            // Copy all properties from the incoming field to the new field
+            newField.setLabel(field.getLabel());
+            newField.setPlaceholder(field.getPlaceholder());
+            newField.setOptions(field.getOptions());
+            newField.setRequired(field.getRequired());
+            newField.setMinLength(field.getMinLength());
+            newField.setMaxLength(field.getMaxLength());
+            newField.setMin(field.getMin());
+            newField.setMax(field.getMax());
+            newField.setPattern(field.getPattern());
+
             if (field.getTemplate() != null && field.getTemplate().getCode() != null) {
                 FormTemplate template = formTemplateRepo.findByCode(field.getTemplate().getCode())
                         .orElseThrow(() -> new EntityNotFoundException("FormTemplate not found with code: " + field.getTemplate().getCode()));
-                field.setTemplate(template);
+                newField.setTemplate(template);
+            } else {
+                throw new IllegalArgumentException("Template is required for FormField");
             }
-            existingFormulaire.getFormFields().add(field);
+
+            existingFormulaire.getFormFields().add(newField);
         }
 
         return formulaireRepo.save(existingFormulaire);

@@ -39,10 +39,7 @@ export class AuthService {
       return of(this.currentUserValue);
     } else {
       return this.http.get<User>(`${this.apiUrl}/current-user`).pipe(
-        tap(user => {
-          this.currentUserSubject.next(user);
-          localStorage.setItem('currentUser', JSON.stringify(user));
-        }),
+        tap(user => this.updateCurrentUserData(user)),
         catchError(error => {
           console.error('Error fetching current user', error);
           return of(null);
@@ -50,7 +47,18 @@ export class AuthService {
       );
     }
   }
-
+  updateCurrentUserData(user: User) {
+    this.currentUserSubject.next(user);
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  }
+  addSubmissionToUser(submission: any) {
+    const currentUser = this.currentUserValue;
+    if (currentUser) {
+      currentUser.submissions = currentUser.submissions || [];
+      currentUser.submissions.push(submission);
+      this.updateCurrentUserData(currentUser);
+    }
+  }
   isAdmin(): boolean {
     const user = this.currentUserValue;
     return user !== null && user.role.name === 'ADMIN';
@@ -87,4 +95,5 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
+  
 }

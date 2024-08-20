@@ -2,65 +2,69 @@
   <ion-toolbar>
     <ion-title>Edit Form</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="close()">Close</ion-button>
+      <ion-button (click)="close()" fill="clear">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
   <ion-item>
     <ion-label position="floating">Form Name</ion-label>
-    <ion-input [(ngModel)]="formName"></ion-input>
+    <ion-input [(ngModel)]="formName" placeholder="Enter form name"></ion-input>
   </ion-item>
 
   <ion-item>
     <ion-label position="floating">Description</ion-label>
-    <ion-textarea [(ngModel)]="description"></ion-textarea>
+    <ion-textarea [(ngModel)]="description" placeholder="Enter description"></ion-textarea>
   </ion-item>
 
   <ion-list>
-    <ion-item *ngFor="let field of formFields; let i = index">
+    <ion-item *ngFor="let field of formFields; let i = index" class="field-item">
       <ion-label>
         <h2>{{ field.fieldType }}</h2>
         <ion-input placeholder="Label" [(ngModel)]="field.label"></ion-input>
         <ion-input *ngIf="shouldHavePlaceholder(field.fieldType)" placeholder="Placeholder" [(ngModel)]="field.placeholder"></ion-input>
 
-        <ion-item>
+        <ion-item class="ion-margin-top">
           <ion-label>Required</ion-label>
           <ion-checkbox [(ngModel)]="field.required"></ion-checkbox>
         </ion-item>
 
-        <div *ngIf="shouldHaveOptions(field.fieldType)">
+        <div *ngIf="shouldHaveOptions(field.fieldType)" class="ion-margin-top">
           <ion-input 
             placeholder="Options (comma separated)" 
-            [(ngModel)]="field.options" 
-            (ngModelChange)="updateOptions(field, $event)">
+            [value]="field.options.join(', ')" 
+            (ionChange)="updateOptions(field, $event)">
           </ion-input>
         </div>
 
-        <div *ngIf="hasLengthValidation(field.fieldType)">
+        <div *ngIf="hasLengthValidation(field.fieldType)" class="ion-margin-top">
           <ion-input type="number" placeholder="Min Length" [(ngModel)]="field.minLength"></ion-input>
           <ion-input type="number" placeholder="Max Length" [(ngModel)]="field.maxLength"></ion-input>
         </div>
 
-        <div *ngIf="hasNumberValidation(field.fieldType)">
+        <div *ngIf="hasNumberValidation(field.fieldType)" class="ion-margin-top">
           <ion-input type="number" placeholder="Min Value" [(ngModel)]="field.min"></ion-input>
           <ion-input type="number" placeholder="Max Value" [(ngModel)]="field.max"></ion-input>
         </div>
 
-        <ion-input placeholder="Pattern (regex)" [(ngModel)]="field.pattern"></ion-input>
       </ion-label>
-      <ion-button slot="end" (click)="removeField(i)">Remove</ion-button>
+      <ion-button fill="clear" (click)="removeField(i)">
+        <ion-icon name="trash"></ion-icon>
+      </ion-button>
     </ion-item>
   </ion-list>
 
   <ion-item>
-    <ion-label>Add Field</ion-label>
+    <ion-label>Select Field Type</ion-label>
     <ion-select placeholder="Select field type" (ionChange)="addField($event.detail.value)">
       <ion-select-option *ngFor="let type of availableFieldTypes" [value]="type">
         {{ type }}
       </ion-select-option>
     </ion-select>
   </ion-item>
+
   <ion-button expand="block" (click)="save()">Save</ion-button>
 </ion-content>

@@ -27,6 +27,7 @@ export class LoginPage {
     try {
       const result = await this.authService.login(this.email, this.password).toPromise();
       console.log('Login successful', result);
+      
       this.router.navigate(['/form-list']); // Navigate to home page after successful login
     } catch (error) {
       console.error('Login failed', error);

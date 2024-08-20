@@ -1,0 +1,93 @@
+/* Global Styles */
+ion-content {
+    --background: #1e1e1e;
+    font-family: 'Roboto', sans-serif;
+    color: #f4f4f4;
+  }
+  
+  /* Header Styles */
+  ion-header ion-toolbar {
+    --background: #306dd6;
+    --color: #f4f4f4;
+  }
+  
+  ion-header ion-title {
+    font-size: 20px;
+    font-weight: 500;
+  }
+  
+  ion-header ion-button {
+    --color: #f4f4f4;
+  }
+  
+  /* Form Styles */
+  ion-item {
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --inner-padding-end: 0;
+    --background: #1e1e1e;
+    --color: #f4f4f4;
+  }
+  
+  ion-input,
+  ion-textarea {
+    --padding-start: 0;
+    --padding-end: 0;
+    font-size: 16px;
+    --color: #f4f4f4;
+  }
+  
+  ion-label {
+    font-size: 14px;
+    color: #b3b3b3;
+  }
+  
+  ion-list {
+    background-color: #262626;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+  }
+  
+  .field-item {
+    border-bottom: 1px solid #333;
+  }
+  
+  .field-item:last-child {
+    border-bottom: none;
+  }
+  
+  .field-item ion-input {
+    font-size: 16px;
+    color: #f4f4f4;
+  }
+  
+  .field-item ion-checkbox {
+    --size: 20px;
+    --background: #1e1e1e;
+    --border-color: #b3b3b3;
+    --background-checked: #007bff;
+    --border-color-checked: #007bff;
+  }
+  
+  .field-item ion-button {
+    --color: #dc3545;
+    font-size: 20px;
+  }
+  
+  /* Add Field Styles */
+  ion-select {
+    font-size: 16px;
+    color: #f4f4f4;
+    --placeholder-color: #b3b3b3;
+  }
+  
+  /* Save Button Styles */
+  ion-button.save-button {
+    --background: #306dd6;
+    --color: #f4f4f4;
+    font-size: 16px;
+    font-weight: 500;
+    height: 48px;
+    margin-top: 16px;
+  }

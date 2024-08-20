@@ -1,0 +1,43 @@
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height to center vertically */
+    background-color: #000; /* Black background for dark theme */
+  }
+  
+  .login-card {
+    background-color: #1e1e1e; /* Dark gray card background */
+    padding: 4rem; /* Increased padding for a larger card */
+    border-radius: 20px; /* Rounded corners for a softer look */
+    box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.6); /* Stronger shadow for depth */
+    max-width: 500px; /* Slightly larger card */
+    width: 100%;
+    margin-left: 380px;
+    margin-top: 100px;
+    color: #fff; /* White text for dark background */
+  }
+  
+  .login-card ion-item {
+    margin-bottom: 2rem; /* More spacing between form items */
+  }
+  
+  .login-card ion-button {
+    margin-top: 2rem;
+  }
+  
+  ion-toolbar {
+    --background: #000; /* Black toolbar background */
+    color: #fff; /* White text in toolbar */
+  }
+  
+  .login-card ion-input,
+  .login-card ion-label {
+    color: #fff; /* White input text and labels */
+  }
+  
+  .login-card ion-item::part(native) {
+    background: #2e2e2e; /* Darker background for input fields */
+    border-radius: 10px;
+  }
+  

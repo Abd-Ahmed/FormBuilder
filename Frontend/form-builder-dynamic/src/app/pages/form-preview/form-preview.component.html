@@ -1,16 +1,14 @@
 <ion-header>
-  <ion-toolbar color="dark">
+  <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/form-list"></ion-back-button>
+      <ion-back-button defaultHref="/user-form-list"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ formulaire?.formName }} Preview</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding dark-theme" *ngIf="formulaire">
   <div class="form-container">
     <h1 class="form-title">{{ formulaire.formName }}</h1>
-    <p class="form-description">{{ formulaire.description }}</p>
 
     <form [formGroup]="previewForm" (ngSubmit)="onSubmit()">
       <div class="form-fields">
@@ -75,9 +73,8 @@
       </div>
 
       <div class="submit-button">
-        <ion-button expand="block" type="submit" [disabled]="!previewForm.valid || isSubmitting">
-          <ion-spinner *ngIf="isSubmitting"></ion-spinner>
-          <span *ngIf="!isSubmitting">Submit</span>
+        <ion-button expand="block" type="submit" >
+          <span>Submit</span>
         </ion-button>
       </div>
     </form>

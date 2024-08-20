@@ -21,7 +21,7 @@ export class FormEditModalComponent implements OnInit {
   ngOnInit() {
     this.formName = this.formulaire.formName;
     this.description = this.formulaire.description;
-    this.formFields = this.formulaire.formFields;
+    this.formFields = [...this.formulaire.formFields]; // Create a copy of the formFields
   }
 
   shouldHavePlaceholder(fieldType: string): boolean {
@@ -29,7 +29,7 @@ export class FormEditModalComponent implements OnInit {
   }
 
   shouldHaveOptions(fieldType: string): boolean {
-    return ['dropdown', 'radio'].includes(fieldType);
+    return ['dropdown', 'radio', 'checkbox'].includes(fieldType);
   }
 
   hasLengthValidation(fieldType: string): boolean {
@@ -40,33 +40,50 @@ export class FormEditModalComponent implements OnInit {
     return fieldType === 'number';
   }
 
-  updateOptions(field: any, options: string) {
+  updateOptions(field: any, event: CustomEvent) {
+    const options = (event.detail.value as string) || '';
     field.options = options.split(',').map(option => option.trim());
   }
 
   addField(fieldType: string) {
-    this.formFields.push({ fieldType, label: '', placeholder: '', required: false });
+    this.formFields.push({
+      fieldType,
+      label: '',
+      placeholder: '',
+      required: false,
+      options: [],
+      minLength: null,
+      maxLength: null,
+      min: null,
+      max: null,
+      pattern: null
+    });
   }
 
   removeField(index: number) {
     this.formFields.splice(index, 1);
   }
-
   save() {
-    this.formulaire.formName = this.formName;
-    this.formulaire.description = this.description;
-    this.formulaire.formFields = this.formFields;
-
-    this.FS.updateFormulaire(this.formulaire.id, this.formulaire).subscribe(
-      (updatedFormulaire) => {
-        this.modalCtrl.dismiss(updatedFormulaire);
+    const updatedFormulaire = {
+      id: this.formulaire.id,
+      formName: this.formName,
+      description: this.description,
+      formFields: this.formFields.map(field => ({
+        ...field,
+        form: null, // Set to null to avoid circular reference
+        template: field.template ? { code: field.template.code } : null // Only send the template code
+      }))
+    };
+  
+    this.FS.updateFormulaire(updatedFormulaire.id, updatedFormulaire).subscribe(
+      (updatedForm) => {
+        this.modalCtrl.dismiss(updatedForm);
       },
       (error) => {
         console.error('Error updating formulaire', error);
       }
     );
   }
-
   close() {
     this.modalCtrl.dismiss();
   }
