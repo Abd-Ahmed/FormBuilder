@@ -68,6 +68,22 @@
               <ion-checkbox [formControlName]="field.label"></ion-checkbox>
             </ion-item>
 
+            <ion-item *ngSwitchCase="'Date'" lines="none">
+              <ion-label class="date-label" position="stacked">{{ field.label }}</ion-label>
+              <ion-datetime-button datetime="datetime"></ion-datetime-button>
+            
+              <ion-modal [keepContentsMounted]="true">
+                <ng-template>
+                  <ion-datetime id="datetime"></ion-datetime>
+                </ng-template>
+              </ion-modal>
+            </ion-item>
+            
+            <ion-item *ngSwitchCase="'File'" lines="none">
+              <ion-label class="file-label" position="stacked">{{ field.label }}</ion-label>
+              <ion-input type="file" [formControlName]="field.label"></ion-input>
+            </ion-item>
+            
           </div>
         </ng-container>
       </div>

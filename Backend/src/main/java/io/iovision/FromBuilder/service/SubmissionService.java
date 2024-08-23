@@ -1,5 +1,8 @@
 package io.iovision.FromBuilder.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.iovision.FromBuilder.model.Formulaire;
 import io.iovision.FromBuilder.model.Submission;
 import io.iovision.FromBuilder.model.User;
@@ -20,15 +23,18 @@ public class SubmissionService {
     private final SubmissionRepo submissionRepo;
     private final FormulaireRepo formulaireRepo;
     private final UserRepo userRepo;
+    private final ObjectMapper objectMapper;
 
     public SubmissionService(SubmissionRepo submissionRepo, FormulaireRepo formulaireRepo, UserRepo userRepo) {
         this.submissionRepo = submissionRepo;
         this.formulaireRepo = formulaireRepo;
         this.userRepo = userRepo;
+        this.objectMapper = new ObjectMapper();
+
     }
 
     @Transactional
-    public Submission saveSubmission(Long formId, Integer userId, Map<String, String> formData) {
+    public Submission saveSubmission(Long formId, Integer userId, Map<String, String> formData) throws JsonProcessingException {
         Formulaire form = formulaireRepo.findById(formId)
                 .orElseThrow(() -> new EntityNotFoundException("Form not found with id: " + formId));
         User user = userRepo.findById(userId)
@@ -38,10 +44,14 @@ public class SubmissionService {
         submission.setForm(form);
         submission.setSubmittedBy(user);
         submission.setSubmittedAt(LocalDateTime.now());
-        submission.setFormData(formData);
+
+        // Convert formData to JSON
+        JsonNode jsonData = objectMapper.valueToTree(formData);
+        submission.setFormData(jsonData);
 
         return submissionRepo.save(submission);
-    }
+
+}
 
     public List<Submission> getSubmissionsByFormId(Long formId) {
         Formulaire form = formulaireRepo.findById(formId)

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service'; // Assuming you have this service
 import { ToastController } from '@ionic/angular';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -25,10 +26,17 @@ export class LoginPage {
     }
   
     try {
-      const result = await this.authService.login(this.email, this.password).toPromise();
-      console.log('Login successful', result);
-      
-      this.router.navigate(['/form-list']); // Navigate to home page after successful login
+      const result = await lastValueFrom(this.authService.login(this.email, this.password));
+      const currentUser = await lastValueFrom(this.authService.getCurrentUser());
+
+      // Check if the user is an admin
+      if (currentUser && currentUser.role && currentUser.role.name === 'ADMIN') {
+        this.router.navigate(['/form-list']);
+        console.log(this.authService.isAdmin()) // Navigate to admin form list
+      } else {
+        this.router.navigate(['/user-form-list']);
+        console.log(this.authService.isAdmin()) // Navigate to admin form list
+      }
     } catch (error) {
       console.error('Login failed', error);
       this.presentToast('Login failed. Please check your credentials.');

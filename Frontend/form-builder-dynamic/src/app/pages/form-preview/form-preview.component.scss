@@ -58,21 +58,15 @@ ion-input, ion-textarea, ion-select {
   --placeholder-opacity: 0.8;
 }
 
+
 ion-label {
   font-weight: 500;
   color: #ffffff;
-  margin-bottom: 8px;  // Add space below the label
+  margin-bottom: 12px;
+  padding-bottom: 4px;
 }
 
-// Style for floating labels
-ion-item.item-has-focus ion-label[position="floating"],
-ion-item.item-has-value ion-label[position="floating"] {
-  transform: translateY(-14px) scale(0.8);  // Adjust the Y-translation
-}
 
-ion-item ion-label[position="floating"] {
-  transform: translateY(8px) scale(1);  // Start position
-}
 
 .radio-group {
   ion-list-header {
@@ -114,6 +108,7 @@ ion-select::part(icon) {
   color: #3880ff;
 }
 
+
 // Add some responsiveness
 @media (max-width: 480px) {
   .form-container {
@@ -127,4 +122,47 @@ ion-select::part(icon) {
   .form-description {
     font-size: 14px;
   }
+  
+}
+.date-label,
+.file-label {
+  font-size: 14px;
+  color: var(--ion-text-color, #fff); /* Ensures good visibility on dark theme */
+  padding-left: 0; /* Aligns the label with the input */
+  margin-bottom: 4px; /* Adds a small space between label and input */
+}
+
+ion-datetime-button,
+ion-input[type="file"] {
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.1); /* Slight background for inputs */
+  border-radius: 4px; /* Rounds the input borders */
+  color: #fff; /* Text color */
+}
+
+ion-item {
+  --inner-padding-end: 0;
+  --inner-padding-start: 0;
+  --padding-bottom: 16px; /* Adds space between form fields */
+}
+
+ion-datetime-button {
+  --button-background: #3a3a3a; /* Background color for date button */
+  --button-color: #fff; /* Text color for date button */
+}
+
+input[type="file"] {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background-color: rgba(255, 255, 255, 0.1); /* Matches the theme */
+  border-radius: 4px;
+  color: #fff;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  padding: 8px;
+  background-color: #3a3a3a; /* Dark background for upload button */
+  color: #fff; /* White text */
+  border-radius: 4px;
 }

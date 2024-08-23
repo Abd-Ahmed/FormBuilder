@@ -16,7 +16,11 @@
     </ion-item>
   </ion-list>
 
-  <ion-text color="medium" *ngIf="submissions.length === 0">
+  <ion-text color="medium" *ngIf="!loading && submissions.length === 0">
     <h2 class="ion-text-center">No submissions yet</h2>
+  </ion-text>
+
+  <ion-text color="danger" *ngIf="error">
+    <p class="ion-text-center">{{ error }}</p>
   </ion-text>
 </ion-content>

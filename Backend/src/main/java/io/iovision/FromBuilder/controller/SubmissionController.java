@@ -1,5 +1,6 @@
 package io.iovision.FromBuilder.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.iovision.FromBuilder.model.Submission;
 import io.iovision.FromBuilder.model.User;
 import io.iovision.FromBuilder.service.SubmissionService;
@@ -27,9 +28,13 @@ public class SubmissionController {
     public ResponseEntity<Submission> createSubmission(@PathVariable Long formId,
                                                        @RequestBody Map<String, String> formData,
                                                        @AuthenticationPrincipal UserDetails userDetails) {
-        User user = (User) userDetails;
-        Submission submission = submissionService.saveSubmission(formId, user.getId(), formData);
-        return ResponseEntity.status(HttpStatus.CREATED).body(submission);
+        try {
+            User user = (User) userDetails;
+            Submission submission = submissionService.saveSubmission(formId, user.getId(), formData);
+            return ResponseEntity.status(HttpStatus.CREATED).body(submission);
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/form/{formId}")

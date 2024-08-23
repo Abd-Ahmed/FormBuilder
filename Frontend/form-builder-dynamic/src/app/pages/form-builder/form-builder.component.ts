@@ -56,7 +56,7 @@ export class FormBuilderComponent implements OnInit {
   }
   
   shouldHaveOptions(fieldType: string): boolean {
-    return ['Dropdown', 'Radio', 'Checkbox'].includes(fieldType);
+    return ['Dropdown', 'Radio'].includes(fieldType);
   }
   
   hasLengthValidation(fieldType: string): boolean {

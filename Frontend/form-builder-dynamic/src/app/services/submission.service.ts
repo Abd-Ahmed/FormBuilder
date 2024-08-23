@@ -19,16 +19,16 @@ export class SubmissionService {
     this.refreshSubject.next(true);
   }
 
-  saveSubmission(formId: number, formData: { [key: string]: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/create/${formId}`, formData).pipe(
-      tap((submission: any) => {
+  saveSubmission(formId: number, formData: { [key: string]: string }): Observable<Submission> {
+    return this.http.post<Submission>(`${this.apiUrl}/create/${formId}`, formData).pipe(
+      tap((submission: Submission) => {
         this.authService.addSubmissionToUser(submission);
         this.triggerRefresh();
       })
     );
   }
-  getUserSubmissions(userId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/user/${userId}`).pipe(
+  getUserSubmissions(userId: number): Observable<Submission[]> {
+    return this.http.get<Submission[]>(`${this.apiUrl}/user/${userId}`).pipe(
       tap(submissions => {
         const currentUser = this.authService.currentUserValue;
         if (currentUser && currentUser.id === userId) {
@@ -38,10 +38,11 @@ export class SubmissionService {
       })
     );
   }
-  getSubmissionsByForm(formId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/form/${formId}`);
+  getSubmissionsByForm(formId: number): Observable<Submission[]> {
+    return this.http.get<Submission[]>(`${this.apiUrl}/form/${formId}`);
   }
-  getSubmission(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`);
+
+  getSubmission(id: number): Observable<Submission> {
+    return this.http.get<Submission>(`${this.apiUrl}/${id}`);
   }
 }

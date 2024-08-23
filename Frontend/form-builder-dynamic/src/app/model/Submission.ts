@@ -1,4 +1,13 @@
 export interface Submission {
-  formId: number;
-  formData: { [key: string]: string };
+  id: number;
+  form: {
+    id: number;
+    formName: string;
+  };
+  submittedBy: {
+    id: number;
+    username: string;
+  };
+  submittedAt: string;
+  formData: any; // This will be the JSON object
 }

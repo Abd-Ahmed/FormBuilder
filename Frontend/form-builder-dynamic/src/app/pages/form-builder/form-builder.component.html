@@ -25,7 +25,8 @@
         <ion-item-group *ngFor="let field of formFields; let i = index" class="field-item">
           <ion-item-divider color="light">
             <ion-label>{{ field.template.type }}</ion-label>
-            <ion-button slot="end" color="danger" size="small" (click)="removeField(i)">Remove</ion-button>
+            <ion-button slot="end" class="light-danger-button" size="small" (click)="removeField(i)">
+            <ion-icon name="trash"></ion-icon></ion-button>
           </ion-item-divider>
 
           <ion-card class="field-card">
