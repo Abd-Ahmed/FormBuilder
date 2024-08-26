@@ -65,12 +65,12 @@
 
             <ion-item class="form-input" *ngIf="hasNumberValidation(field.template.type)">
               <ion-label position="floating">Min Value</ion-label>
-              <ion-input type="number" [(ngModel)]="field.min" placeholder="Enter minimum value"></ion-input>
+              <ion-input type="number" [(ngModel)]="field.min"></ion-input>
             </ion-item>
             
             <ion-item class="form-input" *ngIf="hasNumberValidation(field.template.type)">
               <ion-label position="floating">Max Value</ion-label>
-              <ion-input type="number" [(ngModel)]="field.max" placeholder="Enter maximum value"></ion-input>
+              <ion-input type="number" [(ngModel)]="field.max"></ion-input>
             </ion-item>
             
           </ion-card>

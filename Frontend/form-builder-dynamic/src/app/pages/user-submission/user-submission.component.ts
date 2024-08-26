@@ -82,6 +82,7 @@ export class UserSubmissionComponent implements OnInit, OnDestroy {
     this.formulaireService.getAllFormulaires().subscribe(
       (forms) => {
         this.forms = forms;
+        this.linkSubmissionsToForms();
         this.loading = false;
       },
       (error) => {
@@ -101,4 +102,9 @@ export class UserSubmissionComponent implements OnInit, OnDestroy {
     });
     return await modal.present();
   }
+  linkSubmissionsToForms() {
+    this.submissions.forEach(submission => {
+      submission.form = this.forms.find(form => form.id === submission.form.id);
+    });
+}
 }

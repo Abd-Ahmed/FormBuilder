@@ -24,9 +24,10 @@ public class FormField {
     @JoinColumn(name = "form_id", nullable = false)
     private Formulaire form;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "template_id", nullable = false)
     private FormTemplate template;
+
 
     private String label;
     private String placeholder;
@@ -37,4 +38,8 @@ public class FormField {
     private Integer min;
     private Integer max;
     private String pattern;
+
+    public boolean isRequired() {
+        return required;
+    }
 }

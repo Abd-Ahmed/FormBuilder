@@ -9,5 +9,5 @@ export interface Submission {
     username: string;
   };
   submittedAt: string;
-  formData: any; // This will be the JSON object
+  formData: any;
 }
