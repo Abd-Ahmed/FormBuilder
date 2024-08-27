@@ -22,12 +22,12 @@ public class FormField {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "form_id", nullable = false)
+    @JsonBackReference("formFieldReference")
     private Formulaire form;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "template_id", nullable = false)
     private FormTemplate template;
-
 
     private String label;
     private String placeholder;
@@ -38,8 +38,4 @@ public class FormField {
     private Integer min;
     private Integer max;
     private String pattern;
-
-    public boolean isRequired() {
-        return required;
-    }
 }

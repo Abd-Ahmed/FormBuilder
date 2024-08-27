@@ -10,16 +10,14 @@ import { Router } from '@angular/router';
 export class AppComponent implements OnInit {
   appPages: {title: string, url: string, icon: string}[] = [];
   isLoggedIn: boolean = false;
-  isLoading: boolean = true;
 
   constructor(private AS: AuthService, private router: Router) {}
 
   ngOnInit() {
+    this.updateMenu();
     this.AS.currentUser.subscribe((user) => {
       this.isLoggedIn = !!user;
       this.updateMenu();
-      this.isLoading = false;
-
     });
   }
 

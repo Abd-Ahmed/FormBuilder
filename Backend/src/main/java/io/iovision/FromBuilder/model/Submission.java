@@ -12,13 +12,11 @@ import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 @Entity
 @Getter
 @Setter
 @Table(name = "submission")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Submission {
 
     @Id

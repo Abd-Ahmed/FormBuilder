@@ -1,6 +1,7 @@
 package io.iovision.FromBuilder.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.iovision.FromBuilder.DTO.SubmissionDTO;
 import io.iovision.FromBuilder.model.Submission;
 import io.iovision.FromBuilder.model.User;
 import io.iovision.FromBuilder.service.SubmissionService;
@@ -43,8 +44,8 @@ public class SubmissionController {
         return ResponseEntity.ok(submissions);
     }
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Submission>> getSubmissionsByUserId(@PathVariable Long userId) {
-        List<Submission> submissions = submissionService.getSubmissionsByUserId(userId);
+    public ResponseEntity<List<SubmissionDTO>> getSubmissionsByUserId(@PathVariable Long userId) {
+        List<SubmissionDTO> submissions = submissionService.getSubmissionsByUserId(userId);
         return ResponseEntity.ok(submissions);
     }
 

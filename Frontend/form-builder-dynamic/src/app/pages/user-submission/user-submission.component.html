@@ -10,7 +10,7 @@
   <ion-list *ngIf="!loading && submissions.length > 0">
     <ion-item *ngFor="let submission of submissions" (click)="viewSubmission(submission)">
       <ion-label>
-        <h2>{{ submission.form.formName }}</h2>
+        <h2>{{ submission.formName }}</h2>
         <p>Submitted on: {{ submission.submittedAt | date:'medium' }}</p>
       </ion-label>
     </ion-item>

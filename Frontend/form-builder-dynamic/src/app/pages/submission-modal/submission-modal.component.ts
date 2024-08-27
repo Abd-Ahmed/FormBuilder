@@ -7,7 +7,13 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./submission-modal.component.scss']
 })
 export class SubmissionModalComponent {
-  @Input() submission: any;
+  @Input() formData: any;
+  @Input() formName: string | undefined;
+  @Input() submittedAt: string | undefined;
+
+  get formDataKeys() {
+    return Object.keys(this.formData || {});
+  }
 
   constructor(private modalController: ModalController) {}
 

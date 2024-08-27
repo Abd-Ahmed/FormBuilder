@@ -16,7 +16,6 @@ import { CommonModule } from '@angular/common';
 import { UserSubmissionComponent } from './pages/user-submission/user-submission.component';
 import { UserFormListComponent } from './pages/user-form-list/user-form-list.component';
 import { SubmissionModalComponent } from './pages/submission-modal/submission-modal.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -36,11 +35,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    CommonModule,
-    NgbModule
-    
+    CommonModule
   ],
-  
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },    {
      provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],

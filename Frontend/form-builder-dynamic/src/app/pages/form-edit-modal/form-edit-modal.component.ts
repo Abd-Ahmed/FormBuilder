@@ -1,9 +1,7 @@
-import { Component,OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { Formulaire } from 'app/model/Formulaire';
 import { FormulaireService } from '../../services/formulaire.service';
-import { FormField } from 'app/model/FormField';
-import { FormTemplate } from 'app/model/FormTemplate';
 
 @Component({
   selector: 'app-form-edit-modal',
@@ -11,111 +9,82 @@ import { FormTemplate } from 'app/model/FormTemplate';
   styleUrls: ['./form-edit-modal.component.scss'],
 })
 export class FormEditModalComponent implements OnInit {
-  formId: number;
-  formName: string = '';
-  description: string = '';
-  formFields: FormField[] = [];
-  availableTemplates: FormTemplate[] = [];
+  @Input() formulaire!: Formulaire;
+  
+  formName!: string;
+  description!: string;
+  formFields: any[] = [];
+  availableFieldTypes: string[] = ['text', 'number', 'dropdown', 'radio', 'checkbox'];
 
-  constructor(
-    private modalCtrl: ModalController,
-    private navParams: NavParams,
-    private FS: FormulaireService
-  ) {
-    this.formId = this.navParams.get('formId');
-  }
+  constructor(private modalCtrl: ModalController, private FS: FormulaireService) {}
 
   ngOnInit() {
-    this.loadFormTemplates();
-    this.loadFormData();
+    this.formName = this.formulaire.formName;
+    this.description = this.formulaire.description;
+    this.formFields = [...this.formulaire.formFields]; // Create a copy of the formFields
   }
 
-  loadFormTemplates() {
-    this.FS.getFormTemplates().subscribe(
-      (templates: FormTemplate[]) => {
-        this.availableTemplates = templates;
-      },
-      (error) => {
-        console.error('Error loading form templates:', error);
-      }
-    );
+  shouldHavePlaceholder(fieldType: string): boolean {
+    return ['text', 'number'].includes(fieldType);
   }
 
-  loadFormData() {
-    this.FS.getFormulaireById(this.formId).subscribe(
-      (form: Formulaire) => {
-        this.formName = form.formName;
-        this.description = form.description;
-        this.formFields = form.formFields;
-      },
-      (error) => {
-        console.error('Error loading form data:', error);
-      }
-    );
+  shouldHaveOptions(fieldType: string): boolean {
+    return ['dropdown', 'radio', 'checkbox'].includes(fieldType);
+  }
+
+  hasLengthValidation(fieldType: string): boolean {
+    return fieldType === 'text';
+  }
+
+  hasNumberValidation(fieldType: string): boolean {
+    return fieldType === 'number';
+  }
+
+  updateOptions(field: any, event: CustomEvent) {
+    const options = (event.detail.value as string) || '';
+    field.options = options.split(',').map(option => option.trim());
+  }
+
+  addField(fieldType: string) {
+    this.formFields.push({
+      fieldType,
+      label: '',
+      placeholder: '',
+      required: false,
+      options: [],
+      minLength: null,
+      maxLength: null,
+      min: null,
+      max: null,
+      pattern: null
+    });
   }
 
   removeField(index: number) {
     this.formFields.splice(index, 1);
   }
-
-  saveForm() {
-    const updatedForm: Formulaire = {
-      id: this.formId,
+  save() {
+    const updatedFormulaire = {
+      id: this.formulaire.id,
       formName: this.formName,
       description: this.description,
-      formFields: this.formFields
+      formFields: this.formFields.map(field => ({
+        ...field,
+        form: null, // Set to null to avoid circular reference
+        template: field.template ? { code: field.template.code } : null // Only send the template code
+      }))
     };
   
-    this.FS.updateFormulaire(this.formId, updatedForm).subscribe(
-      () => {
-        this.modalCtrl.dismiss(true);
+    this.FS.updateFormulaire(updatedFormulaire.id, updatedFormulaire).subscribe(
+      (updatedForm) => {
+        this.modalCtrl.dismiss(updatedForm);
       },
       (error) => {
-        console.error('Error updating form:', error);
+        console.error('Error updating formulaire', error);
       }
     );
   }
-
-  cancel() {
-    this.modalCtrl.dismiss(false);
+  close() {
+    this.modalCtrl.dismiss();
   }
-
-  shouldHavePlaceholder(fieldType: string): boolean {
-    return ['Text', 'Number', 'Email', 'Password', 'URL', 'Text Area'].includes(fieldType);
-  }
-  
-  shouldHaveOptions(fieldType: string): boolean {
-    return ['Dropdown', 'Radio'].includes(fieldType);
-  }
-  
-  hasLengthValidation(fieldType: string): boolean {
-    return ['Text', 'Text Area', 'Password'].includes(fieldType);
-  }
-  
-  hasNumberValidation(fieldType: string): boolean {
-    return fieldType === 'Number';
-  }
-  
-  updateOptions(field: FormField, optionsString: string) {
-    field.options = optionsString.split(',').map(option => option.trim());
-  }
-  
-  addField(templateCode: string) {
-    const template = this.availableTemplates.find(t => t.code === templateCode);
-    if (template) {
-      const newField: FormField = {
-        template: template,
-        label: '',
-        placeholder: this.shouldHavePlaceholder(template.type) ? '' : undefined,
-        options: this.shouldHaveOptions(template.type) ? [] : undefined,
-        required: false,
-        minLength: this.hasLengthValidation(template.type) ? 0 : undefined,
-        maxLength: this.hasLengthValidation(template.type) ? undefined : undefined,
-        min: this.hasNumberValidation(template.type) ? undefined : undefined,
-        max: this.hasNumberValidation(template.type) ? undefined : undefined,
-      };
-      this.formFields.push(newField);
-    }
-  }
-  
 }

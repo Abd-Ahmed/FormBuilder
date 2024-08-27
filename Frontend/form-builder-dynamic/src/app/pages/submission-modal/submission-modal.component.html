@@ -1,4 +1,3 @@
-<!-- submission-modal.component.html -->
 <ion-header>
   <ion-toolbar>
     <ion-title>Submission Details</ion-title>
@@ -7,15 +6,16 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 <ion-content class="ion-padding">
-  <h2>{{ submission.form.formName }}</h2>
-  <p>Submitted on: {{ submission.submittedAt | date:'medium' }}</p>
+  <h2>{{ formName }}</h2>
+  <p>Submitted on: {{ submittedAt | date:'medium' }}</p>
   <h3>Form Data:</h3>
   <ion-list>
-    <ion-item *ngFor="let field of submission.form.formFields">
+    <ion-item *ngFor="let key of formDataKeys">
       <ion-label>
-        <h3>{{ field.label }}</h3>
-        <p>{{ submission.formData[field.label] }}</p>
+        <h3>{{ key }}</h3>
+        <p>{{ formData[key] }}</p>
       </ion-label>
     </ion-item>
   </ion-list>

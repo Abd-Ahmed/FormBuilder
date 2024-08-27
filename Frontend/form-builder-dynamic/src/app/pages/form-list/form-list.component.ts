@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormulaireService } from '../../services/formulaire.service';
 import { Formulaire } from 'app/model/Formulaire';
 import { FormEditModalComponent } from '../form-edit-modal/form-edit-modal.component';
-import { ModalController, AlertController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-form-list',
@@ -12,11 +12,7 @@ import { ModalController, AlertController } from '@ionic/angular';
 export class FormListComponent implements OnInit {
   formulaires: Formulaire[] = [];
 
-  constructor(
-    private FS: FormulaireService,
-    private modalController: ModalController,
-    private alertCtrl: AlertController
-  ) {}
+  constructor(private FS: FormulaireService,    private modalCtrl: ModalController  ) {}
 
   ngOnInit() {
     this.loadFormulaires();
@@ -33,28 +29,6 @@ export class FormListComponent implements OnInit {
     );
   }
 
-  async confirmDelete(id: number, formName: string) {
-    const alert = await this.alertCtrl.create({
-      header: 'Confirm Delete',
-      message: `Are you sure you want to delete "${formName}"?`,
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary',
-        },
-        {
-          text: 'Delete',
-          handler: () => {
-            this.deleteFormulaire(id);
-          },
-        },
-      ],
-    });
-
-    await alert.present();
-  }
-
   deleteFormulaire(id: number) {
     this.FS.deleteFormulaire(id).subscribe(
       () => {
@@ -66,21 +40,19 @@ export class FormListComponent implements OnInit {
     );
   }
 
-  async openEditModal(formId: number) {
-    const modal = await this.modalController.create({
+  async editFormulaire(formulaire: Formulaire) {
+    const modal = await this.modalCtrl.create({
       component: FormEditModalComponent,
       componentProps: {
-        formId: formId
+        formulaire: { ...formulaire }
       }
     });
 
-    modal.onDidDismiss().then((result) => {
-      if (result.data) {
-        this.loadFormulaires(); // Assuming you have a method to load the forms
-      }
-    });
+    await modal.present();
 
-    return await modal.present();
+    const { data } = await modal.onDidDismiss();
+    if (data) {
+      this.loadFormulaires();
+    }
   }
-
 }

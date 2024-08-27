@@ -3,6 +3,7 @@ package io.iovision.FromBuilder.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.iovision.FromBuilder.DTO.SubmissionDTO;
 import io.iovision.FromBuilder.model.Formulaire;
 import io.iovision.FromBuilder.model.Submission;
 import io.iovision.FromBuilder.model.User;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class SubmissionService {
@@ -64,11 +66,23 @@ public class SubmissionService {
                 .orElseThrow(() -> new EntityNotFoundException("Submission not found with id: " + id));
     }
 
-    public List<Submission> getSubmissionsByUserId(Long userId) {
+    public List<SubmissionDTO> getSubmissionsByUserId(Long userId) {
         User user = userRepo.findById(userId)
-                    .orElseThrow(() -> new EntityNotFoundException("Submission not found with id: " + userId));
-        return user.getSubmissions();
-
-
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+        return user.getSubmissions().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
+    private SubmissionDTO convertToDTO(Submission submission) {
+        SubmissionDTO dto = new SubmissionDTO();
+        dto.setId(submission.getId());
+        dto.setFormId(submission.getForm().getId());
+        dto.setFormName(submission.getForm().getFormName()); // Assuming there's a getName() method
+        dto.setUserId(Long.valueOf(submission.getSubmittedBy().getId()));
+        dto.setUsername(submission.getSubmittedBy().getUsername());
+        dto.setSubmittedAt(submission.getSubmittedAt());
+        dto.setFormData(submission.getFormData());
+        return dto;
+    }
+
 }

@@ -4,7 +4,6 @@ import { AuthService } from 'app/services/auth.service';
 import { SubmissionService } from 'app/services/submission.service';
 import { SubmissionModalComponent } from '../submission-modal/submission-modal.component';
 import { Subscription } from 'rxjs';
-import { FormulaireService } from 'app/services/formulaire.service';
 import { Submission } from 'app/model/Submission';
 
 @Component({
@@ -17,11 +16,9 @@ export class UserSubmissionComponent implements OnInit, OnDestroy {
   submissions: Submission[] = [];
   loading: boolean = true;
   error: string | null = null;
-  forms: any[] = [];
   private refreshSubscription: Subscription | undefined;
 
   constructor(
-    private formulaireService: FormulaireService,
     private authService: AuthService,
     private submissionService: SubmissionService,
     private modalController: ModalController
@@ -34,17 +31,17 @@ export class UserSubmissionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.loadFormsAndSubmissions();
+    this.loadSubmissions();
     this.refreshSubscription = this.submissionService.refreshSubmissions$.subscribe(
       (shouldRefresh) => {
         if (shouldRefresh) {
-          this.loadFormsAndSubmissions();
+          this.loadSubmissions();
         }
       }
     );
   }
 
-  loadFormsAndSubmissions() {
+  loadSubmissions() {
     this.loading = true;
     this.error = null;
     this.authService.getCurrentUser().subscribe(
@@ -54,7 +51,6 @@ export class UserSubmissionComponent implements OnInit, OnDestroy {
             (submissions) => {
               this.submissions = submissions;
               this.loading = false;
-              this.loadForms();
             },
             (error) => {
               console.error('Error fetching submissions:', error);
@@ -78,33 +74,15 @@ export class UserSubmissionComponent implements OnInit, OnDestroy {
     );
   }
 
-  loadForms() {
-    this.formulaireService.getAllFormulaires().subscribe(
-      (forms) => {
-        this.forms = forms;
-        this.linkSubmissionsToForms();
-        this.loading = false;
-      },
-      (error) => {
-        console.error('Error fetching forms:', error);
-        this.error = 'Failed to load forms. Please try again.';
-        this.loading = false;
-      }
-    );
-  }
-
   async viewSubmission(submission: Submission) {
     const modal = await this.modalController.create({
       component: SubmissionModalComponent,
       componentProps: {
-        submission: submission
-      }
+        formData: submission.formData,
+        formName: submission.formName, // Include this if you want to show the form name
+        submittedAt: submission.submittedAt   
+        }
     });
     return await modal.present();
   }
-  linkSubmissionsToForms() {
-    this.submissions.forEach(submission => {
-      submission.form = this.forms.find(form => form.id === submission.form.id);
-    });
-}
 }

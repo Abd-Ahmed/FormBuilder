@@ -2,7 +2,9 @@
   <ion-toolbar>
     <ion-title>Edit Form</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="cancel()">Cancel</ion-button>
+      <ion-button (click)="close()" fill="clear">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -10,78 +12,59 @@
 <ion-content class="ion-padding">
   <ion-item>
     <ion-label position="floating">Form Name</ion-label>
-    <ion-input [(ngModel)]="formName"></ion-input>
+    <ion-input [(ngModel)]="formName" placeholder="Enter form name"></ion-input>
   </ion-item>
 
   <ion-item>
     <ion-label position="floating">Description</ion-label>
-    <ion-textarea [(ngModel)]="description"></ion-textarea>
+    <ion-textarea [(ngModel)]="description" placeholder="Enter description"></ion-textarea>
   </ion-item>
 
   <ion-list>
-    <ion-item-group *ngFor="let field of formFields; let i = index">
-      <ion-item-divider color="light">
-        <ion-label>{{ field.template.type }}</ion-label>
-        <ion-button slot="end" (click)="removeField(i)">
-          <ion-icon name="trash"></ion-icon>
-        </ion-button>
-      </ion-item-divider>
+    <ion-item *ngFor="let field of formFields; let i = index" class="field-item">
+      <ion-label>
+        <h2>{{ field.fieldType }}</h2>
+        <ion-input placeholder="Label" [(ngModel)]="field.label"></ion-input>
+        <ion-input *ngIf="shouldHavePlaceholder(field.fieldType)" placeholder="Placeholder" [(ngModel)]="field.placeholder"></ion-input>
 
-      <ion-card class="field-card">
-        <ion-item class="form-input">
-          <ion-label position="floating">Label</ion-label>
-          <ion-input [(ngModel)]="field.label"></ion-input>
-        </ion-item>
-
-        <ion-item class="form-input" *ngIf="shouldHavePlaceholder(field.template.type)">
-          <ion-label position="floating">Placeholder</ion-label>
-          <ion-input [(ngModel)]="field.placeholder"></ion-input>
-        </ion-item>
-
-        <ion-item class="form-input">
+        <ion-item class="ion-margin-top">
           <ion-label>Required</ion-label>
-          <ion-checkbox slot="end" [(ngModel)]="field.required"></ion-checkbox>
+          <ion-checkbox [(ngModel)]="field.required"></ion-checkbox>
         </ion-item>
 
-        <ion-item class="form-input" *ngIf="shouldHaveOptions(field.template.type)">
-          <ion-label position="floating">Options (comma separated)</ion-label>
+        <div *ngIf="shouldHaveOptions(field.fieldType)" class="ion-margin-top">
           <ion-input 
-            [ngModel]="field.options?.join(', ')" 
-            (ngModelChange)="updateOptions(field, $event)">
+            placeholder="Options (comma separated)" 
+            [value]="field.options.join(', ')" 
+            (ionChange)="updateOptions(field, $event)">
           </ion-input>
-        </ion-item>
+        </div>
 
-        <ion-item class="form-input" *ngIf="hasLengthValidation(field.template.type)">
-          <ion-label position="floating">Min Length</ion-label>
-          <ion-input type="number" [(ngModel)]="field.minLength"></ion-input>
-        </ion-item>
+        <div *ngIf="hasLengthValidation(field.fieldType)" class="ion-margin-top">
+          <ion-input type="number" placeholder="Min Length" [(ngModel)]="field.minLength"></ion-input>
+          <ion-input type="number" placeholder="Max Length" [(ngModel)]="field.maxLength"></ion-input>
+        </div>
 
-        <ion-item class="form-input" *ngIf="hasLengthValidation(field.template.type)">
-          <ion-label position="floating">Max Length</ion-label>
-          <ion-input type="number" [(ngModel)]="field.maxLength"></ion-input>
-        </ion-item>
+        <div *ngIf="hasNumberValidation(field.fieldType)" class="ion-margin-top">
+          <ion-input type="number" placeholder="Min Value" [(ngModel)]="field.min"></ion-input>
+          <ion-input type="number" placeholder="Max Value" [(ngModel)]="field.max"></ion-input>
+        </div>
 
-        <ion-item class="form-input" *ngIf="hasNumberValidation(field.template.type)">
-          <ion-label position="floating">Min Value</ion-label>
-          <ion-input type="number" [(ngModel)]="field.min"></ion-input>
-        </ion-item>
-        
-        <ion-item class="form-input" *ngIf="hasNumberValidation(field.template.type)">
-          <ion-label position="floating">Max Value</ion-label>
-          <ion-input type="number" [(ngModel)]="field.max"></ion-input>
-        </ion-item>
-        
-      </ion-card>
-    </ion-item-group>
+      </ion-label>
+      <ion-button fill="clear" (click)="removeField(i)">
+        <ion-icon name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
   </ion-list>
+
   <ion-item>
-    <ion-label>Add Field</ion-label>
+    <ion-label>Select Field Type</ion-label>
     <ion-select placeholder="Select field type" (ionChange)="addField($event.detail.value)">
-      <ion-select-option *ngFor="let template of availableTemplates" [value]="template.code">
-        {{ template.type }}
+      <ion-select-option *ngFor="let type of availableFieldTypes" [value]="type">
+        {{ type }}
       </ion-select-option>
     </ion-select>
   </ion-item>
 
-  <ion-button expand="block" (click)="saveForm()">Save Changes</ion-button>
+  <ion-button expand="block" (click)="save()">Save</ion-button>
 </ion-content>

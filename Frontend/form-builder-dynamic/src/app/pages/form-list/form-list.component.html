@@ -3,6 +3,7 @@
     <ion-title>Form List</ion-title>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
   <ion-list>
     <ion-item *ngFor="let formulaire of formulaires">
@@ -10,10 +11,10 @@
         <h2>{{ formulaire.formName }}</h2>
         <p>{{ formulaire.description }}</p>
       </ion-label>
-      <ion-button fill="clear" slot="end" (click)="openEditModal(formulaire.id)">
+      <ion-button fill="clear" slot="end" (click)="editFormulaire(formulaire)">
         <ion-icon name="pencil"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" slot="end" (click)="confirmDelete(formulaire.id, formulaire.formName)">
+      <ion-button fill="clear" slot="end" (click)="deleteFormulaire(formulaire.id)">
         <ion-icon name="trash"></ion-icon>
       </ion-button>
     </ion-item>

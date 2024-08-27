@@ -1,13 +1,9 @@
 export interface Submission {
   id: number;
-  form: {
-    id: number;
-    formName: string;
-  };
-  submittedBy: {
-    id: number;
-    username: string;
-  };
+  formId: number;
+  formName: string;
+  userId: number;
+  username: string;
   submittedAt: string;
   formData: any;
 }
