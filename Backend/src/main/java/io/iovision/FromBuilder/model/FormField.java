@@ -8,9 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 @Entity
 @Getter
 @Setter
@@ -38,4 +35,8 @@ public class FormField {
     private Integer min;
     private Integer max;
     private String pattern;
+
+    public Boolean isRequired() {
+        return required;
+    }
 }

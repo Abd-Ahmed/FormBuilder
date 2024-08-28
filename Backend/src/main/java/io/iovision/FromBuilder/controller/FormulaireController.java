@@ -43,8 +43,7 @@ public class FormulaireController {
         return ResponseEntity.ok().build();
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<Formulaire> updateFormulaire(@PathVariable Long id, @RequestBody Formulaire formulaire) {
-        Formulaire updatedFormulaire = formulaireService.updateFormulaire(id, formulaire);
-        return ResponseEntity.ok(updatedFormulaire);
+    public Formulaire editFormulaire(@PathVariable Long id, @RequestBody Formulaire formulaire) {
+        return formulaireService.editFormulaire(id, formulaire);
     }
 }

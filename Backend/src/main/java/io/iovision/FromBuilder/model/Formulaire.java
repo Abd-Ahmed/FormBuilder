@@ -15,7 +15,6 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "formulaire")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Formulaire {
 
     @Id

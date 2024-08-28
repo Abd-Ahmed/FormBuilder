@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,43 +51,56 @@ public class FormulaireService {
         formulaireRepo.deleteById(id);
     }
     @Transactional
-    public Formulaire updateFormulaire(Long id, Formulaire formulaire) {
+    public Formulaire editFormulaire(Long id, Formulaire updatedFormulaire) {
         Formulaire existingFormulaire = formulaireRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Formulaire not found with id: " + id));
 
-        existingFormulaire.setFormName(formulaire.getFormName());
-        existingFormulaire.setDescription(formulaire.getDescription());
+        existingFormulaire.setFormName(updatedFormulaire.getFormName());
+        existingFormulaire.setDescription(updatedFormulaire.getDescription());
 
-        // Clear existing fields
-        existingFormulaire.getFormFields().clear();
+        // Create a set of updated field IDs
+        Set<Long> updatedFieldIds = updatedFormulaire.getFormFields().stream()
+                .map(FormField::getId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
 
-        // Add updated fields
-        for (FormField field : formulaire.getFormFields()) {
-            FormField newField = new FormField();
-            newField.setForm(existingFormulaire);
+        // Remove fields that are no longer present in the updated form
+        existingFormulaire.getFormFields().removeIf(field -> field.getId() != null && !updatedFieldIds.contains(field.getId()));
 
-            // Copy all properties from the incoming field to the new field
-            newField.setLabel(field.getLabel());
-            newField.setPlaceholder(field.getPlaceholder());
-            newField.setOptions(field.getOptions());
-            newField.setRequired(field.getRequired());
-            newField.setMinLength(field.getMinLength());
-            newField.setMaxLength(field.getMaxLength());
-            newField.setMin(field.getMin());
-            newField.setMax(field.getMax());
-            newField.setPattern(field.getPattern());
+        // Update existing fields and add new ones
+        for (FormField updatedField : updatedFormulaire.getFormFields()) {
+            if (updatedField.getId() != null) {
+                // Update existing field
+                FormField fieldToUpdate = existingFormulaire.getFormFields().stream()
+                        .filter(field -> field.getId().equals(updatedField.getId()))
+                        .findFirst()
+                        .orElseThrow(() -> new EntityNotFoundException("FormField not found with id: " + updatedField.getId()));
 
-            if (field.getTemplate() != null && field.getTemplate().getCode() != null) {
-                FormTemplate template = formTemplateRepo.findByCode(field.getTemplate().getCode())
-                        .orElseThrow(() -> new EntityNotFoundException("FormTemplate not found with code: " + field.getTemplate().getCode()));
-                newField.setTemplate(template);
+                updateFieldProperties(fieldToUpdate, updatedField);
             } else {
-                throw new IllegalArgumentException("Template is required for FormField");
+                // Add new field
+                updatedField.setForm(existingFormulaire);
+                if (updatedField.getTemplate() != null && updatedField.getTemplate().getCode() != null) {
+                    FormTemplate template = formTemplateRepo.findByCode(updatedField.getTemplate().getCode())
+                            .orElseThrow(() -> new EntityNotFoundException("FormTemplate not found with code: " + updatedField.getTemplate().getCode()));
+                    updatedField.setTemplate(template);
+                }
+                existingFormulaire.getFormFields().add(updatedField);
             }
-
-            existingFormulaire.getFormFields().add(newField);
         }
 
         return formulaireRepo.save(existingFormulaire);
+    }
+
+    private void updateFieldProperties(FormField target, FormField source) {
+        target.setLabel(source.getLabel());
+        target.setPlaceholder(source.getPlaceholder());
+        target.setOptions(source.getOptions());
+        target.setRequired(source.isRequired());
+        target.setMinLength(source.getMinLength());
+        target.setMaxLength(source.getMaxLength());
+        target.setMin(source.getMin());
+        target.setMax(source.getMax());
+        // Update other properties as needed
     }
 }
