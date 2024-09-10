@@ -21,7 +21,7 @@ public class UserService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof UserDetails) {
-            String email = ((UserDetails)principal).getUsername(); // Spring Security uses username for the principal, which in this case is the email
+            String email = ((UserDetails)principal).getUsername();
             return userRepository.findByEmail(email);
         }
 

@@ -79,7 +79,7 @@ export class UserSubmissionComponent implements OnInit, OnDestroy {
       component: SubmissionModalComponent,
       componentProps: {
         formData: submission.formData,
-        formName: submission.formName, // Include this if you want to show the form name
+        formName: submission.formName,
         submittedAt: submission.submittedAt   
         }
     });

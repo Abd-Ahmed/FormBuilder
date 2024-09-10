@@ -64,13 +64,10 @@ public class FormulaireService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-        // Remove fields that are no longer present in the updated form
         existingFormulaire.getFormFields().removeIf(field -> field.getId() != null && !updatedFieldIds.contains(field.getId()));
 
-        // Update existing fields and add new ones
         for (FormField updatedField : updatedFormulaire.getFormFields()) {
             if (updatedField.getId() != null) {
-                // Update existing field
                 FormField fieldToUpdate = existingFormulaire.getFormFields().stream()
                         .filter(field -> field.getId().equals(updatedField.getId()))
                         .findFirst()
@@ -78,7 +75,6 @@ public class FormulaireService {
 
                 updateFieldProperties(fieldToUpdate, updatedField);
             } else {
-                // Add new field
                 updatedField.setForm(existingFormulaire);
                 if (updatedField.getTemplate() != null && updatedField.getTemplate().getCode() != null) {
                     FormTemplate template = formTemplateRepo.findByCode(updatedField.getTemplate().getCode())
@@ -101,6 +97,5 @@ public class FormulaireService {
         target.setMaxLength(source.getMaxLength());
         target.setMin(source.getMin());
         target.setMax(source.getMax());
-        // Update other properties as needed
     }
 }

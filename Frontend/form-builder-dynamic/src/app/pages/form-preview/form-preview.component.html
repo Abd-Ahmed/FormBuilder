@@ -74,10 +74,11 @@
             
               <ion-modal [keepContentsMounted]="true">
                 <ng-template>
-                  <ion-datetime id="datetime"></ion-datetime>
+                  <ion-datetime id="datetime" presentation="date" (ionChange)="onDateChange($event, field.label)"></ion-datetime>
                 </ng-template>
               </ion-modal>
             </ion-item>
+            
             
             <ion-item *ngSwitchCase="'File'" lines="none">
               <ion-label class="file-label" position="stacked">{{ field.label }}</ion-label>

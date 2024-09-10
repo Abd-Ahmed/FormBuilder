@@ -29,13 +29,12 @@ export class LoginPage {
       const result = await lastValueFrom(this.authService.login(this.email, this.password));
       const currentUser = await lastValueFrom(this.authService.getCurrentUser());
 
-      // Check if the user is an admin
       if (currentUser && currentUser.role && currentUser.role.name === 'ADMIN') {
         this.router.navigate(['/form-list']);
-        console.log(this.authService.isAdmin()) // Navigate to admin form list
+        console.log(this.authService.isAdmin())
       } else {
         this.router.navigate(['/user-form-list']);
-        console.log(this.authService.isAdmin()) // Navigate to admin form list
+        console.log(this.authService.isAdmin()) 
       }
     } catch (error) {
       console.error('Login failed', error);

@@ -76,7 +76,7 @@ export class FormListComponent implements OnInit {
 
     modal.onDidDismiss().then((result) => {
       if (result.data) {
-        this.loadFormulaires(); // Assuming you have a method to load the forms
+        this.loadFormulaires(); 
       }
     });
 

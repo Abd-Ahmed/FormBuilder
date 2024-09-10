@@ -70,14 +70,14 @@ export class AuthService {
         if (response && response.token) {
           localStorage.setItem('token', response.token);
           this.tokenSubject.next(response.token);
-          this.getCurrentUser().subscribe(); // Fetch and store the user data
+          this.getCurrentUser().subscribe(); 
         }
       })
     );
   }
 
-  register(firstName: string, lastName: string, email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, { firstName, lastName, email, password });
+  register(firstname: string, lastname: string, email: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, { firstname, lastname, email, password });
   }
 
   logout() {

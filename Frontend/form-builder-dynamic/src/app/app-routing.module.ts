@@ -16,27 +16,27 @@ const routes: Routes = [
   {
     path: 'form-builder',
     component: FormBuilderComponent,
-    canActivate: [AuthGuard] // Protect this route with the AuthGuard
+    canActivate: [AuthGuard] 
   },
   {
     path: 'form-list',
     component: FormListComponent,
-    canActivate: [AuthGuard] // Protect this route with the AuthGuard
+    canActivate: [AuthGuard] 
   },
   {
     path: 'form-preview/:id',
     component: FormPreviewComponent,
-    canActivate: [AuthGuard] // Protect this route with the AuthGuard
+    canActivate: [AuthGuard] 
   },
   {
     path: 'user-form-list',
     component: UserFormListComponent,
-    canActivate: [AuthGuard] // Protect this route with the AuthGuard
+    canActivate: [AuthGuard] 
   },
   {
     path: 'user-submissions',
     component: UserSubmissionComponent,
-    canActivate: [AuthGuard] // Protect this route with the AuthGuard
+    canActivate: [AuthGuard] 
   },
   {
     path: 'login',

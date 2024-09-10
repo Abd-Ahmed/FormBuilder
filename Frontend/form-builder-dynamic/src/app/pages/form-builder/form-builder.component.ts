@@ -47,8 +47,14 @@ export class FormBuilderComponent implements OnInit {
     };
 
     this.FS.createFormulaire(formToSave).subscribe(() => {
+      this.resetForm();
       this.router.navigate(['/form-list']);
     });
+  }
+  resetForm() {
+    this.formName = '';
+    this.description = '';
+    this.formFields = [];
   }
 
   shouldHavePlaceholder(fieldType: string): boolean {

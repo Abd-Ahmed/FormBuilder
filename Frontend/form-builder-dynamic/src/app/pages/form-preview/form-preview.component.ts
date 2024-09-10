@@ -62,13 +62,18 @@ export class FormPreviewComponent implements OnInit {
     if (this.previewForm.valid) {
       this.isSubmitting = true;
       const formData = this.previewForm.value;
-
+      Object.keys(formData).forEach(key => {
+        const value = formData[key];
+        if (value instanceof Date) {
+          formData[key] = value.toISOString();
+        }
+      });
       this.submissionService.saveSubmission(this.formulaire.id, formData).subscribe(
         (response) => {
           this.isSubmitting = false;
           this.presentToast('Submission saved successfully');
-          this.submissionService.triggerRefresh(); // Trigger refresh
-          this.router.navigateByUrl('/user-submissions', { replaceUrl: true }); // Avoid unnecessary navigation issues
+          this.submissionService.triggerRefresh(); 
+          this.router.navigateByUrl('/user-submissions', { replaceUrl: true });
         },
         (error) => {
           this.isSubmitting = false;
@@ -80,7 +85,14 @@ export class FormPreviewComponent implements OnInit {
       this.presentToast('Please fill all required fields');
     }
   }
-
+  onDateChange(event: any, fieldLabel: string) {
+    const dateValue = event.detail.value;
+    if (dateValue) {
+      const formattedDate = new Date(dateValue).toISOString().split('T')[0]; 
+      this.previewForm.get(fieldLabel)?.setValue(formattedDate);
+    }
+  }
+  
   async presentToast(message: string) {
     const toast = await this.toastController.create({
       message: message,
@@ -88,20 +100,5 @@ export class FormPreviewComponent implements OnInit {
       position: 'bottom'
     });
     toast.present();
-  }
-
-  getFieldType(fieldType: string): string {
-    switch (fieldType) {
-      case 'Number':
-        return 'number';
-      case 'Email':
-        return 'email';
-      case 'Password':
-        return 'password';
-      case 'URL':
-        return 'url';
-      default:
-        return 'text';
-    }
   }
 }

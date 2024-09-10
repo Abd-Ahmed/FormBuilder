@@ -47,7 +47,6 @@ public class SubmissionService {
         submission.setSubmittedBy(user);
         submission.setSubmittedAt(LocalDateTime.now());
 
-        // Convert formData to JSON
         JsonNode jsonData = objectMapper.valueToTree(formData);
         submission.setFormData(jsonData);
 
@@ -77,7 +76,7 @@ public class SubmissionService {
         SubmissionDTO dto = new SubmissionDTO();
         dto.setId(submission.getId());
         dto.setFormId(submission.getForm().getId());
-        dto.setFormName(submission.getForm().getFormName()); // Assuming there's a getName() method
+        dto.setFormName(submission.getForm().getFormName());
         dto.setUserId(Long.valueOf(submission.getSubmittedBy().getId()));
         dto.setUsername(submission.getSubmittedBy().getUsername());
         dto.setSubmittedAt(submission.getSubmittedAt());
