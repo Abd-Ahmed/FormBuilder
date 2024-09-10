@@ -32,6 +32,7 @@ Dynamic Form Builder is an Angular-based Ionic application designed for building
 - **Clone the repository:** `git clone <repository-url>`
 - **Navigate to the project directory:** `cd form-builder-dynamic`
 - **Install the dependencies:** `npm install`
+- **PostgreSQL Database Configuration:** configure the application.properties file located in src/main/resources 
 - **Start the application:** `ionic serve`
 
 
